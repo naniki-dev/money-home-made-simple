@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Money Home USSD</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="phone">
+
+    <div class="phone-header">
+        <span>Money Home</span>
+        <span>📶 🔋</span>
+    </div>
+
+    <div class="screen">
+
+        <div class="ussd-code">
+            *120#
+        </div>
+
+        <div id="ussd-message">
+            <p>Welcome to Money Home</p>
+
+            <p>
+                1. Send Money<br>
+                2. Check Transfer<br>
+                3. Language
+            </p>
+
+            <p>Select an option:</p>
+        </div>
+
+        <div id="input-display">
+            _
+        </div>
+
+    </div>
+
+    <div class="keypad">
+
+        <button onclick="pressKey('1')">1</button>
+        <button onclick="pressKey('2')">2</button>
+        <button onclick="pressKey('3')">3</button>
+
+        <button onclick="pressKey('4')">4</button>
+        <button onclick="pressKey('5')">5</button>
+        <button onclick="pressKey('6')">6</button>
+
+        <button onclick="pressKey('7')">7</button>
+        <button onclick="pressKey('8')">8</button>
+        <button onclick="pressKey('9')">9</button>
+
+        <button onclick="pressKey('*')">*</button>
+        <button onclick="pressKey('0')">0</button>
+        <button onclick="pressKey('#')">#</button>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
