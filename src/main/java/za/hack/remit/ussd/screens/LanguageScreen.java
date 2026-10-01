@@ -8,7 +8,7 @@ public class LanguageScreen extends BaseScreen {
     @Override public ScreenId id() { return ScreenId.LANGUAGE; }
 
     @Override protected String body(UssdSession s) {
-        return "Welcome / Mhoroi\n1 English\n2 chiShona";   // intentionally hard-coded: language not chosen yet
+        return msg(s, "lang.menu");   // language isn't chosen yet, so this reads the English file
     }
 
     @Override public ScreenId handle(UssdSession s, String input) {
