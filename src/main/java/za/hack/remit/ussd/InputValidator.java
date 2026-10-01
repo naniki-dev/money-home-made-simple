@@ -10,7 +10,7 @@ public final class InputValidator {
     private static final Pattern AMOUNT = Pattern.compile("^\\d{1,7}(\\.\\d{1,2})?$");
     private static final Pattern ZW_MOBILE = Pattern.compile("^(?:\\+?263|0)(7\\d{8})$");
     private static final Pattern PIN = Pattern.compile("^\\d{4}$");
-    private static final Pattern REFERENCE = Pattern.compile("^[A-Z0-9]{6,16}$");
+    private static final Pattern REFERENCE = Pattern.compile("^[A-Z0-9-]{6,16}$");
 
     private InputValidator() {}
 

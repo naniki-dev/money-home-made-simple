@@ -1,6 +1,7 @@
 package za.hack.remit.ussd;
 
 import java.math.BigDecimal;
+import za.hack.remit.fees.Quote;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,8 @@ public class UssdSession {
     public boolean isFresh(long maxAgeMs) { return System.currentTimeMillis() - updatedAt < maxAgeMs; }
 
     // ===================== P2 additions: what UssdController / store / screens call =====================
+    public Quote quote;                  // the rate-locked quote the user is looking at
+    public String lastReference;         // latest transfer from this phone (USSD can't type letters, so Track uses this)
     private String msisdn;
     private String sessionId;
     private ScreenId current = ScreenId.LANGUAGE;
@@ -73,6 +76,7 @@ public class UssdSession {
     /** Wipe the in-progress transfer but keep the language (and your saved recipient). */
     public void resetJourney() {
         data.clear();
+        quote = null;
         clearDraft();
         clearError();
         errorCount = 0;

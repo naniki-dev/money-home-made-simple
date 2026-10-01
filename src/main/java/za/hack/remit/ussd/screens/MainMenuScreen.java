@@ -13,7 +13,7 @@ public class MainMenuScreen extends BaseScreen {
         var c = InputValidator.choice(input, 3);
         if (c.isEmpty()) { s.fail("err.invalid_choice"); return id(); }
         return switch (c.get()) {
-            case 1 -> ScreenId.AMOUNT;
+            case 1 -> s.recipient == null ? ScreenId.RECIPIENT : ScreenId.AMOUNT;   // saved receiver: skip a screen
             case 2 -> ScreenId.TRACK;
             default -> ScreenId.LANGUAGE;
         };

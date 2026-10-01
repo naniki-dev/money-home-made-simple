@@ -8,13 +8,14 @@ import za.hack.remit.i18n.Messages;
 import za.hack.remit.security.RateLimiter;
 
 /**
- * Single entry point for the gateway / simulator.
- * Contract: text is "" on the first dial, otherwise ONLY the latest input
- * (state is kept server-side, not in a 1*500*1 string).
+ * Entry point for POST /ussd. Follows the team contract: text is the whole "1*2*3" string,
+ * "" on the first dial, and the reply starts with CON or END.
+ * Only the LAST item of text is used; the journey state is kept per phone number on the server.
  */
 public class UssdController {
     private static final int MAX_ERRORS = 3;
-    private static final Set<ScreenId> MID_JOURNEY = Set.of(ScreenId.RECIPIENT, ScreenId.CONFIRM, ScreenId.PIN);
+    private static final long DRAFT_MAX_AGE_MS = 5 * 60 * 1000L;
+    private static final Set<ScreenId> MID_JOURNEY = Set.of(ScreenId.CONFIRM, ScreenId.PIN);
 
     private final UssdSessionStore store;
     private final Map<ScreenId, Screen> screens = new EnumMap<>(ScreenId.class);
@@ -28,19 +29,28 @@ public class UssdController {
         screenList.forEach(sc -> screens.put(sc.id(), sc));
     }
 
-    public UssdResponse handle(String msisdn, String sessionId, String text) {
-        if (!rateLimiter.allow(msisdn)) {
+    /** What the HTTP route returns: "CON ..." or "END ...". */
+    public String handle(String sessionId, String phone, String text) {
+        return handleResponse(sessionId, phone, text).toGatewayString();
+    }
+
+    public UssdResponse handleResponse(String sessionId, String phone, String text) {
+        if (!rateLimiter.allow(phone)) {
             return UssdResponse.end(messages.get("en", "err.rate_limited"));
         }
-        String input = text == null ? "" : text.trim();
-        UssdSession s = store.find(msisdn).orElseGet(() -> new UssdSession(msisdn, sessionId));
+        boolean freshDial = text == null || text.isBlank();
+        String input = freshDial ? "" : text.substring(text.lastIndexOf('*') + 1).trim();
+
+        UssdSession s = store.find(phone).orElseGet(() -> new UssdSession(phone, sessionId));
         s.setSessionId(sessionId);
 
-        if (input.isEmpty()) {                       // fresh dial of *120#
+        if (freshDial) {                             // *120# dialled
             s.clearError();
             s.resetErrorCount();
             ScreenId cur = s.current();
-            if (MID_JOURNEY.contains(cur)) {         // dropped mid-transfer -> offer to resume
+            if (MID_JOURNEY.contains(cur) && !s.isFresh(DRAFT_MAX_AGE_MS)) {
+                s.resetJourney();                    // draft too old: start clean
+            } else if (MID_JOURNEY.contains(cur)) {  // dropped mid-transfer -> offer to resume
                 s.put("resumeTo", (cur == ScreenId.PIN ? ScreenId.CONFIRM : cur).name());
                 s.setCurrent(ScreenId.RESUME);
             } else if (cur != ScreenId.LANGUAGE && cur != ScreenId.MAIN_MENU && cur != ScreenId.RESUME) {
@@ -68,7 +78,7 @@ public class UssdController {
 
     private UssdResponse finish(UssdSession s) {
         UssdResponse r = screens.get(s.current()).render(s);
-        if (r.end()) s.resetJourney();               // render first, then wipe
+        if (r.end()) s.resetJourney();               // render first, then wipe the draft
         store.save(s);
         return r;
     }

@@ -11,7 +11,7 @@ public class RecipientScreen extends BaseScreen {
     @Override public ScreenId handle(UssdSession s, String input) {
         var n = InputValidator.zimbabweMsisdn(input);
         if (n.isEmpty()) { s.fail("err.invalid_number"); return id(); }
-        s.put("recipient", n.get());
-        return ScreenId.CONFIRM;
+        s.recipient = n.get();                       // remembered for the next send
+        return ScreenId.AMOUNT;
     }
 }
