@@ -19,7 +19,8 @@ public class TransferService {
 
     private final Map<String, Transfer> byReference = new ConcurrentHashMap<>();
     private final Map<String, String> referenceBySession = new ConcurrentHashMap<>();
-
+    /** The timer never moves a transfer past this status. The last step is done by hand. */
+    private static final TransferStatus AUTO_STOP = TransferStatus.READY_TO_COLLECT;
     private static final Logger LOG = Logger.getLogger(TransferService.class.getName());
     private final List<TransferListener> listeners = new CopyOnWriteArrayList<>();
     /** Called when the customer presses Confirm. A repeat with the same sessionId returns the same transfer. */
@@ -153,7 +154,7 @@ public class TransferService {
         Transfer t = byReference.get(normalise(reference));
         if (t == null) return false;
         synchronized (t) {
-            if (t.getStatus().isTerminal()) return false;
+            if (t.getStatus().isTerminal() || t.getStatus()==AUTO_STOP) return false;
             if (Duration.between(t.getUpdatedAt(), Instant.now()).compareTo(minIdle) < 0) return false;
             moveTo(t, t.getStatus().nextOnHappyPath().orElseThrow());
             return true;
