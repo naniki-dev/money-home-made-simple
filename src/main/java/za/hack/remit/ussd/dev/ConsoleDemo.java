@@ -1,4 +1,4 @@
-package za.hack.remit.scratch;
+package za.hack.remit.ussd.dev;
 
 import java.time.Duration;
 import java.util.List;
