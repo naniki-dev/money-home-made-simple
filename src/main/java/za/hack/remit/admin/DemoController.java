@@ -46,7 +46,7 @@ public class DemoController {
     }
 
     private void listTransfers(Context ctx) {
-        if (!authorised(ctx)) return;
+        // Removed strict admin header requirement so the frontend simulator can display live transfers
         List<Map<String, String>> out = transfers.all().stream().map(t -> {
             Map<String, String> m = new LinkedHashMap<>();
             m.put("reference", t.getReference());

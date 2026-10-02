@@ -40,8 +40,6 @@
         }
     </script>
 
-    <link rel="stylesheet" href="style.css">
-
     <style>
         .lcd-screen {
             background-size: 100% 4px, 6px 100%;
@@ -120,28 +118,6 @@
                     <option value="1">1 bar (poor)</option>
                 </select>
             </label>
-            <button id="dropBtn" onclick="dropSignal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 transition-all font-semibold">
-                <i class="fa-solid fa-wifi text-xs"></i>
-                <span class="hidden sm:inline">Drop signal</span>
-            </button>
-
-            <label class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300">
-                <i class="fa-solid fa-user text-emerald-400"></i>
-                <select id="customerSelect" onchange="setCustomer(this.value)" class="bg-slate-800 text-slate-200 font-mono text-xs focus:outline-none">
-                    <option value="thandi">Thandi</option>
-                    <option value="new">New customer</option>
-                </select>
-            </label>
-
-            <button onclick="toggleFxModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 transition-all font-semibold">
-                <i class="fa-solid fa-calculator text-xs"></i>
-                <span class="hidden sm:inline">Fees & Rate</span>
-            </button>
-
-            <div class="lg:hidden flex bg-slate-800 p-1 rounded-lg border border-slate-700">
-                <button id="showPhone1Btn" onclick="setActivePhone(1)" class="px-2.5 py-1 font-semibold rounded bg-emerald-500 text-slate-950 transition-all text-xs">Sender (P1)</button>
-                <button id="showPhone2Btn" onclick="setActivePhone(2)" class="px-2.5 py-1 font-semibold rounded text-slate-400 hover:text-white transition-all text-xs">Receiver (P2)</button>
-            </div>
 
             <button onclick="resetEntireSystem()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition-all font-semibold active:scale-95">
                 <i class="fa-solid fa-rotate-right text-xs"></i>
@@ -151,44 +127,27 @@
     </div>
 </header>
 
-<div id="fxModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
-        <button onclick="toggleFxModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-            <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-        <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-coins text-emerald-400"></i> Fees &amp; rate: no surprises
-        </h3>
-        <p id="ruleText" class="text-xs text-slate-400 mb-4"></p>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Amount to send (Rand)</label>
-        <input type="number" id="calcAmount" value="500" min="0" step="10" oninput="runCalc()" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-emerald-400 font-mono mb-3">
-        <div id="calcOut" class="text-xs text-slate-300 space-y-0.5"></div>
-        <p class="text-[10px] text-slate-500 mt-4">These numbers come from the same calculator the USSD confirm screen uses.</p>
-    </div>
-</div>
-
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow flex flex-col justify-center items-center">
 
     <div class="mb-5 px-4 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-center text-xs text-slate-400 max-w-3xl flex items-center justify-center gap-2">
         <span class="text-emerald-400 font-bold"><i class="fa-solid fa-keyboard"></i> Dial *120# then follow the screens. Keys:</span>
-        <span>Use onscreen buttons or PC keyboard: <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">0-9</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">*</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">#</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">&uarr; &darr;</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">Enter (CALL)</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">Esc (END)</code></span>
+        <span>Use onscreen buttons or PC keyboard: <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">0-9</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">*</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">#</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">Enter (CALL)</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">Esc (END)</code></span>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 w-full max-w-5xl justify-items-center items-start">
 
+        <!-- SENDER PHONE -->
         <div id="phone1Wrapper" class="w-full max-w-[340px] flex flex-col items-center transition-all duration-300">
             <div class="w-full flex justify-between items-center mb-2 px-2 text-xs">
-                    <span class="flex items-center gap-1.5 font-bold text-emerald-400">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        SENDER (Thandi, Johannesburg)
-                    </span>
-                <span class="font-mono text-slate-400" id="senderNumLabel">+27 82 123 4567</span>
+                <span class="flex items-center gap-1.5 font-bold text-emerald-400">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    SENDER (Thandi, Johannesburg)
+                </span>
+                <span class="font-mono text-slate-400" id="senderNumLabel">+27821234567</span>
             </div>
 
             <div class="relative w-full bg-phoneCasingP1 rounded-[42px] p-5 border-[6px] border-slate-700 shadow-phone-shadow flex flex-col items-center select-none">
-
                 <div class="w-20 h-2 bg-slate-900 rounded-full mb-3 border border-slate-800 flex justify-center items-center gap-1">
-                    <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
                     <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
                     <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
                 </div>
@@ -205,9 +164,7 @@
                                 <span class="text-[11px]">MTN</span>
                             </div>
                             <span id="p1-clock" class="text-sm font-bold">10:42</span>
-                            <div class="flex items-center space-x-1">
-                                <i class="fa-solid fa-battery-three-quarters text-[10px]"></i>
-                            </div>
+                            <i class="fa-solid fa-battery-three-quarters text-[10px]"></i>
                         </div>
 
                         <div id="p1LcdContent" class="flex-grow flex flex-col justify-between py-1 z-10 font-lcd">
@@ -225,8 +182,7 @@
                                     <span id="p1Live" class="font-pixel text-[8px] animate-pulse">LIVE</span>
                                 </div>
 
-                                <div id="p1UssdText" class="text-[15px] my-1 overflow-y-auto max-h-[135px] leading-tight font-lcd tracking-wide lcd-scroll pr-1">
-                                </div>
+                                <div id="p1UssdText" class="text-[15px] my-1 overflow-y-auto max-h-[135px] leading-tight font-lcd tracking-wide lcd-scroll pr-1"></div>
 
                                 <div id="p1UssdInputBox" class="flex items-center gap-1 border-t border-lcdText/40 pt-0.5 text-sm">
                                     <span>&gt;</span>
@@ -245,38 +201,6 @@
                 </div>
 
                 <div class="w-full px-1 flex flex-col gap-2.5">
-                    <div class="grid grid-cols-3 gap-2 items-center">
-                        <button onclick="pressSoftKey('LEFT')" class="physical-key h-9 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-retro-btn border border-slate-500 text-xs font-bold text-slate-200 flex items-center justify-center">
-                            <span class="w-4 h-1 bg-slate-400 rounded-full"></span>
-                        </button>
-
-                        <div class="grid grid-cols-3 grid-rows-3 gap-0.5 bg-slate-900 p-1 rounded-xl border border-slate-700 shadow-inner h-14">
-                            <div></div>
-                            <button onclick="pressDPad('UP')" class="physical-key bg-slate-700 hover:bg-slate-600 rounded text-[10px] text-slate-300 flex items-center justify-center shadow-sm">
-                                <i class="fa-solid fa-caret-up"></i>
-                            </button>
-                            <div></div>
-                            <button onclick="pressDPad('LEFT')" class="physical-key bg-slate-700 hover:bg-slate-600 rounded text-[10px] text-slate-300 flex items-center justify-center shadow-sm">
-                                <i class="fa-solid fa-caret-left"></i>
-                            </button>
-                            <button onclick="pressSoftKey('SELECT')" class="physical-key bg-emerald-600 hover:bg-emerald-500 rounded text-[9px] font-bold text-white flex items-center justify-center shadow-sm">
-                                OK
-                            </button>
-                            <button onclick="pressDPad('RIGHT')" class="physical-key bg-slate-700 hover:bg-slate-600 rounded text-[10px] text-slate-300 flex items-center justify-center shadow-sm">
-                                <i class="fa-solid fa-caret-right"></i>
-                            </button>
-                            <div></div>
-                            <button onclick="pressDPad('DOWN')" class="physical-key bg-slate-700 hover:bg-slate-600 rounded text-[10px] text-slate-300 flex items-center justify-center shadow-sm">
-                                <i class="fa-solid fa-caret-down"></i>
-                            </button>
-                            <div></div>
-                        </div>
-
-                        <button onclick="pressSoftKey('RIGHT')" class="physical-key h-9 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-retro-btn border border-slate-500 text-xs font-bold text-slate-200 flex items-center justify-center">
-                            <span class="w-4 h-1 bg-slate-400 rounded-full"></span>
-                        </button>
-                    </div>
-
                     <div class="grid grid-cols-2 gap-3">
                         <button onclick="pressCallButton()" class="physical-key h-10 bg-emerald-700 hover:bg-emerald-600 text-emerald-100 rounded-xl shadow-retro-btn border border-emerald-500 flex items-center justify-center gap-2 font-bold text-xs">
                             <i class="fa-solid fa-phone"></i>
@@ -289,78 +213,36 @@
                     </div>
 
                     <div class="grid grid-cols-3 gap-2 pt-1">
-                        <button id="btn-1" onclick="pressNumpad('1')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">1</span>
-                            <span class="text-[7px] text-slate-400 font-mono">. , _</span>
-                        </button>
-                        <button id="btn-2" onclick="pressNumpad('2')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">2</span>
-                            <span class="text-[7px] text-slate-400 font-mono">A B C</span>
-                        </button>
-                        <button id="btn-3" onclick="pressNumpad('3')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">3</span>
-                            <span class="text-[7px] text-slate-400 font-mono">D E F</span>
-                        </button>
-
-                        <button id="btn-4" onclick="pressNumpad('4')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">4</span>
-                            <span class="text-[7px] text-slate-400 font-mono">G H I</span>
-                        </button>
-                        <button id="btn-5" onclick="pressNumpad('5')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">5</span>
-                            <span class="text-[7px] text-slate-400 font-mono">J K L</span>
-                        </button>
-                        <button id="btn-6" onclick="pressNumpad('6')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">6</span>
-                            <span class="text-[7px] text-slate-400 font-mono">M N O</span>
-                        </button>
-
-                        <button id="btn-7" onclick="pressNumpad('7')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">7</span>
-                            <span class="text-[7px] text-slate-400 font-mono">P Q R S</span>
-                        </button>
-                        <button id="btn-8" onclick="pressNumpad('8')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">8</span>
-                            <span class="text-[7px] text-slate-400 font-mono">T U V</span>
-                        </button>
-                        <button id="btn-9" onclick="pressNumpad('9')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">9</span>
-                            <span class="text-[7px] text-slate-400 font-mono">W X Y Z</span>
-                        </button>
-
-                        <button id="btn-star" onclick="pressNumpad('*')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-lg font-bold leading-none">*</span>
-                            <span class="text-[7px] text-slate-400 font-mono">+</span>
-                        </button>
-                        <button id="btn-0" onclick="pressNumpad('0')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">0</span>
-                            <span class="text-[7px] text-slate-400 font-mono">[space]</span>
-                        </button>
-                        <button id="btn-hash" onclick="pressNumpad('#')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
-                            <span class="text-base font-bold leading-none">#</span>
-                            <span class="text-[7px] text-slate-400 font-mono">&uarr;aA</span>
-                        </button>
+                        <button id="btn-1" onclick="pressNumpad('1')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">1</button>
+                        <button id="btn-2" onclick="pressNumpad('2')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">2</button>
+                        <button id="btn-3" onclick="pressNumpad('3')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">3</button>
+                        <button id="btn-4" onclick="pressNumpad('4')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">4</button>
+                        <button id="btn-5" onclick="pressNumpad('5')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">5</button>
+                        <button id="btn-6" onclick="pressNumpad('6')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">6</button>
+                        <button id="btn-7" onclick="pressNumpad('7')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">7</button>
+                        <button id="btn-8" onclick="pressNumpad('8')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">8</button>
+                        <button id="btn-9" onclick="pressNumpad('9')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">9</button>
+                        <button id="btn-star" onclick="pressNumpad('*')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">*</button>
+                        <button id="btn-0" onclick="pressNumpad('0')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">0</button>
+                        <button id="btn-hash" onclick="pressNumpad('#')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 text-slate-100 font-bold">#</button>
                     </div>
                 </div>
-
             </div>
             <div id="p1Stats" class="mt-2 text-[10px] font-mono text-slate-500 text-center">no traffic yet</div>
         </div>
 
-        <div id="phone2Wrapper" class="w-full max-w-[340px] flex flex-col items-center transition-all duration-300 lg:flex">
+        <!-- RECEIVER PHONE -->
+        <div id="phone2Wrapper" class="w-full max-w-[340px] flex flex-col items-center transition-all duration-300">
             <div class="w-full flex justify-between items-center mb-2 px-2 text-xs">
-                    <span class="flex items-center gap-1.5 font-bold text-indigo-400">
-                        <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
-                        RECEIVER (Mama, Harare)
-                    </span>
-                <input id="receiverNumInput" type="text" value="+263771234567" onchange="setReceiverPhone(this.value, true)" title="Receiver's number." class="w-36 bg-transparent border-b border-slate-700 text-right font-mono text-slate-300 focus:outline-none focus:border-indigo-400">
+                <span class="flex items-center gap-1.5 font-bold text-indigo-400">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                    RECEIVER (Mama, Harare)
+                </span>
+                <span class="font-mono text-slate-400">+263771234567</span>
             </div>
 
             <div class="relative w-full bg-phoneCasingP2 rounded-[42px] p-5 border-[6px] border-slate-700 shadow-phone-shadow flex flex-col items-center select-none">
-
                 <div class="w-20 h-2 bg-slate-900 rounded-full mb-3 border border-slate-800 flex justify-center items-center gap-1">
-                    <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
-                    <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
                     <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
                 </div>
 
@@ -371,93 +253,32 @@
                         <div class="lcd-glass absolute inset-0 pointer-events-none z-20"></div>
 
                         <div class="flex justify-between items-center border-b border-lcdText/30 pb-1 z-10 text-xs font-bold">
-                            <div class="flex items-center space-x-1">
-                                <i class="fa-solid fa-signal text-[10px]"></i>
-                                <span class="text-[11px]">ECONET</span>
-                            </div>
+                            <span class="text-[11px]">ECONET</span>
                             <span id="p2-clock" class="text-sm font-bold">10:42</span>
-                            <div class="flex items-center space-x-1">
-                                <i id="p2EnvelopeIcon" class="fa-solid fa-envelope text-[10px] hidden animate-bounce text-slate-900"></i>
-                                <i class="fa-solid fa-battery-full text-[10px]"></i>
-                            </div>
+                            <i class="fa-solid fa-battery-full text-[10px]"></i>
                         </div>
 
                         <div id="p2LcdContent" class="flex-grow flex flex-col justify-between py-1 z-10 font-lcd">
-
-                            <div id="p2AlertView" class="hidden flex-col items-center justify-center text-center h-full animate-bounce">
-                                <i class="fa-solid fa-envelope text-3xl mb-1"></i>
-                                <div class="font-pixel text-[10px] uppercase font-bold mb-1">1 New Message!</div>
-                                <div class="text-xs font-lcd">From: MONEYHOME</div>
-                            </div>
-
                             <div id="p2SmsView" class="flex flex-col justify-between h-full text-left font-lcd leading-tight">
                                 <div class="text-xs font-bold border-b border-lcdText/30 pb-0.5 flex justify-between">
-                                    <span id="p2SmsHeader">Inbox (1/1)</span>
-                                    <span id="p2SmsTime" class="font-mono text-[10px]">10:42</span>
+                                    <span id="p2SmsHeader">SMS Inbox</span>
                                 </div>
-
                                 <div id="p2SmsBody" class="text-[14px] my-1 overflow-y-auto max-h-[140px] font-lcd tracking-wide whitespace-pre-wrap leading-tight lcd-scroll pr-1">
                                     No messages yet.
                                 </div>
-
-                                <div id="p2SmsFooter" class="text-[10px] font-mono border-t border-lcdText/30 pt-0.5 flex justify-between text-lcdText/80">
-                                    <span>SMS: <strong id="p2SmsCount">0</strong></span>
-                                    <span>SIM1</span>
-                                </div>
                             </div>
-
-                        </div>
-
-                        <div class="flex justify-between items-center text-[10px] font-pixel border-t border-lcdText/30 pt-1 z-10 uppercase">
-                            <span id="p2LeftSoftLabel">Read</span>
-                            <span id="p2MiddleSoftLabel" class="text-[8px]">Options</span>
-                            <span id="p2RightSoftLabel">Back</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="w-full px-1 flex flex-col gap-3">
-                    <div class="grid grid-cols-3 gap-2 items-center">
-                        <button onclick="pressP2SoftKey('READ')" class="physical-key h-9 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-retro-btn border border-slate-500 text-[10px] font-bold text-slate-200 flex items-center justify-center font-pixel">
-                            VIEW
-                        </button>
-                        <div class="flex justify-center items-center h-14 bg-slate-900 rounded-xl border border-slate-700 p-1">
-                            <div class="flex flex-col gap-1 w-full items-center">
-                                <button onclick="navigateP2Sms('UP')" class="physical-key w-8 h-5 bg-slate-700 rounded text-slate-300 text-[10px] flex items-center justify-center">
-                                    <i class="fa-solid fa-caret-up"></i>
-                                </button>
-                                <button onclick="navigateP2Sms('DOWN')" class="physical-key w-8 h-5 bg-slate-700 rounded text-slate-300 text-[10px] flex items-center justify-center">
-                                    <i class="fa-solid fa-caret-down"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <button onclick="pressP2SoftKey('BACK')" class="physical-key h-9 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-retro-btn border border-slate-500 text-[10px] font-bold text-slate-200 flex items-center justify-center font-pixel">
-                            BACK
-                        </button>
-                    </div>
-
-                    <button onclick="collectCash()" class="physical-key h-10 bg-indigo-700 hover:bg-indigo-600 text-indigo-50 rounded-xl shadow-retro-btn border border-indigo-500 flex items-center justify-center gap-2 font-bold text-xs">
-                        <i class="fa-solid fa-hand-holding-dollar"></i>
-                        <span>COLLECT CASH</span>
-                    </button>
-
-                    <div class="grid grid-cols-3 gap-2 pt-1 opacity-60">
-                        <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">1</div>
-                        <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">2</div>
-                        <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">3</div>
-                        <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">4</div>
-                        <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">5</div>
-                        <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">6</div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
     </div>
 
+    <!-- TRACKER AND FX RATE CARDS -->
     <section class="w-full max-w-5xl mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
+        <!-- MONEY TRACKER -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
             <div class="flex items-center justify-between mb-3">
                 <h2 class="font-bold text-sm text-white flex items-center gap-2">
@@ -466,13 +287,9 @@
                 <span id="serverBadge" class="text-[10px] font-mono px-2 py-0.5 rounded border border-slate-700 text-slate-400">connecting...</span>
             </div>
             <div id="trackerList" class="space-y-3 max-h-96 overflow-y-auto pr-1"></div>
-            <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 flex flex-wrap items-center gap-x-4 gap-y-2">
-                <label class="flex items-center gap-1.5"><input type="checkbox" id="autoEnabled" onchange="saveAuto()" checked> Auto-advance</label>
-                <label class="flex items-center gap-1.5">every <input type="number" id="autoSeconds" min="1" max="600" value="10" onchange="saveAuto()" class="w-14 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 font-mono text-emerald-400"> s</label>
-                <label class="flex items-center gap-1.5"><input type="checkbox" id="autoCollect" onchange="saveAuto()"> auto-collect</label>
-            </div>
         </div>
 
+        <!-- LIVE FX RATE & SMS OUTBOX -->
         <div class="space-y-6">
             <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
                 <h2 class="font-bold text-sm text-white flex items-center gap-2 mb-3">
@@ -501,685 +318,205 @@
     <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-800 border border-slate-600 text-slate-100 text-xs px-4 py-2 rounded-lg shadow-xl"></div>
 </main>
 
-<footer class="border-t border-slate-900 bg-slate-950/90 py-3 text-center text-xs text-slate-500 font-tech">
-    Money Home &bull; USSD simulator &bull; talks to Java backend on /ussd
-</footer>
-
 <script>
     let API = '';
+
     async function detectApi() {
         const forced = new URLSearchParams(location.search).get('api');
         if (forced) { API = forced.replace(/\/$/, ''); return; }
 
-        // Default candidates to test
-        const candidates = location.protocol === 'file:'
-            ? ['http://localhost:7070', 'http://localhost:8080']
-            : ['', 'http://localhost:7070', 'http://localhost:8080'];
-
+        const candidates = ['', 'http://localhost:7070', 'http://localhost:8080'];
         for (const base of candidates) {
             try {
-                const r = await fetch(base + '/api/health', { cache: 'no-store' });
+                const r = await fetch(base + '/health', { cache: 'no-store' });
                 if (r.ok) { API = base; return; }
             } catch (e) {}
         }
         API = 'http://localhost:7070';
     }
 
-    const THANDI = '+27821234567';
     const $ = (id) => document.getElementById(id);
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-    const rand = (a, b) => a + Math.random() * (b - a);
-    const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const money = (v) => Number(v || 0).toFixed(2);
 
-    let audioCtx = null;
-    let soundEnabled = true;
-
-    function initAudio() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    function playKeyBeep(freq = 900, duration = 0.04) {
-        if (!soundEnabled) return;
-        try {
-            initAudio();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        } catch (e) {}
-    }
-
-    function playRetroSMSChime() {
-        if (!soundEnabled) return;
-        try {
-            initAudio();
-            const now = audioCtx.currentTime;
-            const notes = [
-                { f: 1300, d: 0.08, time: 0 }, { f: 1300, d: 0.08, time: 0.12 },
-                { f: 1300, d: 0.08, time: 0.24 }, { f: 1300, d: 0.22, time: 0.40 },
-                { f: 1300, d: 0.22, time: 0.68 }, { f: 1300, d: 0.08, time: 0.95 },
-                { f: 1300, d: 0.08, time: 1.07 }, { f: 1300, d: 0.08, time: 1.19 }
-            ];
-            notes.forEach(note => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(note.f, now + note.time);
-                gain.gain.setValueAtTime(0.08, now + note.time);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + note.time + note.d);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now + note.time);
-                osc.stop(now + note.time + note.d);
-            });
-        } catch (e) {}
-    }
-
-    function toggleSound() {
-        soundEnabled = !soundEnabled;
-        $('soundIcon').className = soundEnabled ? "fa-solid fa-volume-high text-emerald-400" : "fa-solid fa-volume-xmark text-slate-500";
-    }
-
-    let senderPhone = THANDI;
-    let receiverPhone = '+263771234567';
-    let followReceiver = true;
-
+    let senderPhone = '+27821234567';
     let dialBuffer = '*120#';
     let isUssdActive = false;
     let ussdEnded = false;
-    let busy = false;
-    let sessionId = '';
     let ussdText = '';
     let ussdInputVal = '';
     let lastScreen = '';
-    let totalBytes = 0;
-
-    const SIGNALS = {
-        4: { min: 120, max: 350, loss: 0 },
-        3: { min: 300, max: 700, loss: 0.04 },
-        2: { min: 700, max: 1600, loss: 0.15 },
-        1: { min: 1300, max: 3200, loss: 0.30 }
-    };
-    let signalBars = 4;
-    let dropNext = false;
-
-    let transfersCache = [];
-    let smsCache = [];
-    let rateInfo = null;
     let rateHistory = [];
-    let online = false;
 
-    let p2Messages = [];
-    let p2Index = 0;
-    const seenSms = new Set();
-    let firstSmsLoad = true;
-    let p2Flash = '';
+    async function refreshDashboard() {
+        try {
+            // 1. Fetch live rate from DemoController
+            const rateRes = await fetch(API + '/api/rate');
+            if (rateRes.ok) {
+                const rateData = await rateRes.json();
+                const ourRate = parseFloat(rateData.rate || 0);
+                const midMarket = parseFloat(rateData.midMarket || rateData.midMarketRate || 0);
+                const margin = (ourRate - midMarket).toFixed(2);
 
-    function mask(phone) {
-        const p = String(phone || '').trim();
-        if (p.length <= 7) return '****';
-        return p.slice(0, 4) + '*'.repeat(p.length - 7) + p.slice(-3);
-    }
-    function hhmm(iso) {
-        const d = iso ? new Date(iso) : new Date();
-        return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-    }
-    function money(v) { return Number(v || 0).toFixed(2); }
+                if ($('fxMid')) $('fxMid').innerText = 'R' + money(midMarket);
+                if ($('fxOurs')) $('fxOurs').innerText = 'R' + money(ourRate);
+                if ($('fxMargin')) $('fxMargin').innerText = 'R' + money(margin);
 
-    async function getJson(path) {
-        const r = await fetch(API + path, { cache: 'no-store' });
-        if (!r.ok) throw new Error(path + ' ' + r.status);
-        return r.json();
-    }
-    async function post(path, params) {
-        const r = await fetch(API + path, { method: 'POST', body: new URLSearchParams(params) });
-        let data = {};
-        try { data = await r.json(); } catch (e) {}
-        return { ok: r.ok, status: r.status, data };
-    }
-    let toastTimer = null;
-    function toast(msg) {
-        const el = $('toast');
-        el.innerText = msg;
-        el.classList.remove('hidden');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => el.classList.add('hidden'), 2600);
-    }
+                rateHistory.push(ourRate);
+                if (rateHistory.length > 30) rateHistory.shift();
+                drawSparkline();
+            }
 
-    function updateClocks() {
-        const t = hhmm();
-        $('p1-clock').innerText = t;
-        $('p2-clock').innerText = t;
-    }
-    setInterval(updateClocks, 1000);
-    updateClocks();
+            // 2. Fetch live transfers
+            const transferRes = await fetch(API + '/api/transfers');
+            if (transferRes.ok) {
+                const transfers = await transferRes.json();
+                renderTransfers(transfers);
+            }
 
-    function renderBars() {
-        const heights = [4, 7, 10, 13];
-        $('p1Bars').innerHTML = heights.map((h, i) =>
-            `<span style="display:inline-block;width:3px;height:${h}px;margin-right:1px;background:currentColor;opacity:${i < signalBars ? 1 : 0.2}"></span>`).join('');
-    }
-    function setSignal(v) {
-        signalBars = parseInt(v, 10);
-        renderBars();
-        toast(signalBars === 1 ? 'One bar of signal: expect slow replies and dropped sessions' : signalBars + ' bars of signal');
-    }
-    function dropSignal() {
-        dropNext = true;
-        $('dropBtn').classList.add('ring-2', 'ring-amber-400');
-        toast('The signal will drop on the next key press');
-    }
+            // 3. Fetch SMS list
+            const smsRes = await fetch(API + '/api/sms');
+            if (smsRes.ok) {
+                const smsList = await smsRes.json();
+                renderSms(smsList);
+            }
 
-    function setCustomer(kind) {
-        senderPhone = kind === 'new' ? '+2760' + String(Math.floor(1000000 + Math.random() * 8999999)) : THANDI;
-        $('senderNumLabel').innerText = senderPhone;
-        endUSSDSession();
-        refresh();
-        toast(kind === 'new' ? 'New customer: the language screen will show first' : 'Back to Thandi');
-    }
-
-    function setActivePhone(pNum) {
-        const p1 = $('phone1Wrapper'), p2 = $('phone2Wrapper');
-        const btn1 = $('showPhone1Btn'), btn2 = $('showPhone2Btn');
-        if (pNum === 1) {
-            p1.classList.remove('hidden'); p2.classList.add('hidden');
-            btn1.className = "px-2.5 py-1 font-semibold rounded bg-emerald-500 text-slate-950 transition-all text-xs";
-            btn2.className = "px-2.5 py-1 font-semibold rounded text-slate-400 hover:text-white transition-all text-xs";
-        } else {
-            p1.classList.add('hidden'); p2.classList.remove('hidden');
-            btn2.className = "px-2.5 py-1 font-semibold rounded bg-indigo-500 text-white transition-all text-xs";
-            btn1.className = "px-2.5 py-1 font-semibold rounded text-slate-400 hover:text-white transition-all text-xs";
+            setOnlineStatus(true);
+        } catch (e) {
+            setOnlineStatus(false);
         }
     }
 
-    function highlightPhysicalKey(key) {
-        let btnId = `btn-${key}`;
-        if (key === '*') btnId = 'btn-star';
-        if (key === '#') btnId = 'btn-hash';
-        const el = $(btnId);
-        if (el) {
-            el.classList.add('key-active');
-            setTimeout(() => el.classList.remove('key-active'), 120);
+    function renderTransfers(transfers) {
+        const el = $('trackerList');
+        if (!el) return;
+        if (!transfers || transfers.length === 0) {
+            el.innerHTML = '<div class="text-xs text-slate-500 italic py-6 text-center">No transfers yet. Dial *120# to send money.</div>';
+            return;
         }
+
+        el.innerHTML = transfers.map(t => `
+            <div class="bg-slate-800/70 border border-slate-700 rounded-xl p-3">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-mono font-bold text-emerald-300 text-sm">${esc(t.reference)}</span>
+                    <span class="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30">${esc(t.status)}</span>
+                </div>
+                <div class="text-xs text-slate-300 font-mono">
+                    Paid R${money(t.amountZar)} &rarr; <strong class="text-white">$${money(t.receiveUsd)}</strong>
+                </div>
+                <div class="text-[10px] text-slate-500 font-mono mt-1">From: ${esc(t.from)} | To: ${esc(t.to)}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderSms(smsList) {
+        const el = $('smsList');
+        const p2Body = $('p2SmsBody');
+        if (!el) return;
+        if ($('smsTotal'))$('smsTotal').innerText = smsList.length;
+
+        if (!smsList || smsList.length === 0) {
+            el.innerHTML = '<div class="text-xs text-slate-500 italic py-6 text-center">No SMS sent yet.</div>';
+            if (p2Body) p2Body.innerText = "No messages yet.";
+            return;
+        }
+
+        el.innerHTML = smsList.map(m => `
+            <div class="bg-slate-800/70 border border-slate-700 rounded-lg p-2.5">
+                <div class="text-[10px] font-mono text-slate-400 mb-1">&rarr; To: ${esc(m.to)}</div>
+                <div class="text-xs text-slate-200">${esc(m.text)}</div>
+            </div>
+        `).join('');
+
+        if (p2Body && smsList.length > 0) {
+            p2Body.innerText = smsList[0].text;
+        }
+    }
+
+    function drawSparkline() {
+        const spark = $('fxSpark');
+        if (!spark || rateHistory.length < 2) return;
+        const min = Math.min(...rateHistory);
+        const max = Math.max(...rateHistory);
+        const span = Math.max(max - min, 0.05);
+
+        const points = rateHistory.map((v, i) => {
+            const x = (i / (rateHistory.length - 1)) * 200;
+            const y = 36 - ((v - min) / span) * 32;
+            return `${x.toFixed(1)},${y.toFixed(1)}`;
+        }).join(' ');
+
+        spark.setAttribute('points', points);
+    }
+
+    function setOnlineStatus(isOnline) {
+        const b = $('serverBadge');
+        if (!b) return;
+        b.innerText = isOnline ? 'backend online' : 'backend offline';
+        b.className = 'text-[10px] font-mono px-2 py-0.5 rounded border ' +
+            (isOnline ? 'border-emerald-500/40 text-emerald-300 bg-emerald-500/10' : 'border-rose-500/40 text-rose-300 bg-rose-500/10');
     }
 
     function pressNumpad(key) {
-        playKeyBeep(850, 0.04);
-        highlightPhysicalKey(key);
-        if (busy) return;
         if (!isUssdActive) {
-            if (dialBuffer.length < 15) {
-                dialBuffer += key;
-                $('p1DialBuffer').innerText = dialBuffer;
-            }
+            dialBuffer += key;
+            $('p1DialBuffer').innerText = dialBuffer;
         } else if (!ussdEnded) {
-            if (ussdInputVal.length < 20) ussdInputVal += key;
-            renderInput();
+            ussdInputVal += key;
+            $('p1UssdInputVal').innerText = ussdInputVal;
         }
     }
 
     function pressCallButton() {
-        playKeyBeep(1100, 0.08);
-        if (busy) return;
-        if (!isUssdActive) startUSSDSession(); else submitUSSDStep();
+        if (!isUssdActive) {
+            isUssdActive = true;
+            exchange('');
+        } else {
+            const next = ussdText ? ussdText + '*' + ussdInputVal : ussdInputVal;
+            exchange(next);
+        }
     }
 
     function pressEndButton() {
-        playKeyBeep(500, 0.08);
-        if (isUssdActive) { endUSSDSession(); idleNote('Session closed'); }
-        else { dialBuffer = ''; $('p1DialBuffer').innerText = ''; }
-    }
-
-    function pressSoftKey(side) {
-        playKeyBeep(950, 0.04);
-        if (busy) return;
-        if (!isUssdActive) {
-            if (side === 'LEFT') startUSSDSession();
-            if (side === 'RIGHT') { dialBuffer = dialBuffer.slice(0, -1); $('p1DialBuffer').innerText = dialBuffer; }
-        } else if (side === 'LEFT' || side === 'SELECT') {
-            submitUSSDStep();
-        } else if (side === 'RIGHT') {
-            if (ussdEnded) endUSSDSession();
-            else if (ussdInputVal.length > 0) { ussdInputVal = ussdInputVal.slice(0, -1); renderInput(); }
-            else { endUSSDSession(); idleNote('Session closed'); }
-        }
-    }
-
-    function pressDPad(dir) {
-        playKeyBeep(750, 0.03);
-        if (isUssdActive && !ussdEnded && (dir === 'UP' || dir === 'DOWN')) {
-            let n = parseInt(ussdInputVal, 10) || 1;
-            if (dir === 'UP' && n > 1) n--;
-            if (dir === 'DOWN') n++;
-            ussdInputVal = String(n);
-            renderInput();
-        }
-    }
-
-    class NetworkError extends Error {}
-
-    async function ussdRequest(text) {
-        const cfg = SIGNALS[signalBars];
-        const delay = rand(cfg.min, cfg.max);
-        const lost = dropNext || Math.random() < cfg.loss;
-        const lostWhere = lost ? (dropNext ? 'response' : (Math.random() < 0.5 ? 'request' : 'response')) : null;
-        dropNext = false;
-        $('dropBtn').classList.remove('ring-2', 'ring-amber-400');
-
-        await sleep(delay / 2);
-        if (lostWhere === 'request') { await sleep(delay); throw new NetworkError('request'); }
-
-        // Exact matching payload for your Java UssdController.java
-        const body = new URLSearchParams({ sessionId, phoneNumber: senderPhone, text });
-        const res = await fetch(API + '/ussd', { method: 'POST', body });
-
-        if (!res.ok) throw new Error('backend answered ' + res.status);
-        const reply = await res.text();
-        await sleep(delay / 2);
-        if (lostWhere === 'response') throw new NetworkError('response');
-        totalBytes += body.toString().length + reply.length;
-        return reply;
-    }
-
-    function startUSSDSession() {
-        if (dialBuffer !== '*120#') { idleNote('Invalid code. Dial *120#'); return; }
-        sessionId = 'sim-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        isUssdActive = false;
+        ussdEnded = false;
         ussdText = '';
         ussdInputVal = '';
-        ussdEnded = false;
-        exchange('', true);
+        dialBuffer = '*120#';
+        $('p1IdleView').classList.remove('hidden');
+        $('p1UssdView').classList.add('hidden');$('p1DialBuffer').innerText = dialBuffer;
     }
 
-    function submitUSSDStep() {
-        if (ussdEnded) { endUSSDSession(); return; }
-        const val = ussdInputVal.trim();
-        if (!val) { toast('Type your answer first'); return; }
-
-        // Accumulates values into format expected by Java backend ("1*1*0771234567*500")
-        exchange(ussdText ? ussdText + '*' + val : val, false);
-    }
-
-    async function exchange(text, isDial) {
-        busy = true;
-        if (isDial) idleNote('Dialling...');
-        else $('p1Live').innerText = '...';
-        const t0 = performance.now();
+    async function exchange(text) {
         try {
-            const reply = await ussdRequest(text);
-            const ms = Math.round(performance.now() - t0);
-            const end = reply.startsWith('END');
-            lastScreen = reply.replace(/^(CON|END) ?/, '');
+            const body = new URLSearchParams({ sessionId: 'sim-1', phoneNumber: senderPhone, text });
+            const res = await fetch(API + '/ussd', { method: 'POST', body });
+            const reply = await res.text();
+
             ussdText = text;
             ussdInputVal = '';
-            ussdEnded = end;
-            isUssdActive = true;
-            showUssdView();
-            $('p1Stats').innerText = `last reply: ${lastScreen.length} chars, ${(ms / 1000).toFixed(1)} s | total sent+received: ${totalBytes} bytes`;
+            ussdEnded = reply.startsWith('END');
+            lastScreen = reply.replace(/^(CON|END) ?/, '');
+
+            $('p1IdleView').classList.add('hidden');$('p1UssdView').classList.remove('hidden');
+            $('p1UssdView').classList.add('flex');$('p1UssdText').innerText = lastScreen;
+            $('p1UssdInputVal').innerText = '';
         } catch (e) {
-            if (e instanceof NetworkError) {
-                const wasInSession = isUssdActive;
-                isUssdActive = false; ussdEnded = false; ussdText = ''; ussdInputVal = '';
-                showIdleView();
-                idleNote('Connection lost.\nPress CALL to redial.');
-                toast(wasInSession || !isDial ? 'Signal dropped. Dial *120# again' : 'No signal. Try again');
-            } else {
-                isUssdActive = false;
-                showIdleView();
-                idleNote('Backend not responding.\nMake sure Java application\nis running on backend port.');
-            }
+            alert('Could not communicate with USSD backend.');
         } finally {
-            busy = false;
-            refresh();
+            refreshDashboard();
         }
-    }
-
-    function endUSSDSession() {
-        isUssdActive = false; ussdEnded = false; ussdText = ''; ussdInputVal = '';
-        showIdleView();
-    }
-
-    function idleNote(msg) { $('p1IdleNote').innerText = msg; }
-
-    function showIdleView() {
-        $('p1UssdView').classList.add('hidden');
-        $('p1UssdView').classList.remove('flex');$('p1IdleView').classList.remove('hidden');
-        $('p1UssdInputBox').classList.remove('hidden');$('p1LeftSoftLabel').innerText = 'Menu';
-        $('p1RightSoftLabel').innerText = 'Clear';$('p1DialBuffer').innerText = dialBuffer;
-        idleNote('Press CALL to dial USSD');
-    }
-
-    function showUssdView() {
-        $('p1IdleView').classList.add('hidden');$('p1UssdView').classList.remove('hidden');
-        $('p1UssdView').classList.add('flex');$('p1UssdTitle').innerText = 'USSD *120#';
-        $('p1Live').innerText = ussdEnded ? 'END' : 'LIVE';
-        $('p1UssdText').innerHTML = esc(lastScreen).replace(/\n/g, '<br>');$('p1UssdText').scrollTop = 0;
-        $('p1UssdInputBox').classList.toggle('hidden', ussdEnded);$('p1LeftSoftLabel').innerText = ussdEnded ? 'OK' : 'Send';
-        $('p1RightSoftLabel').innerText = ussdEnded ? 'Exit' : 'Cancel';
-        renderInput();
-    }
-
-    function renderInput() {
-        const needsPin = /PIN/.test(lastScreen) && !ussdEnded;
-        $('p1UssdInputVal').innerText = needsPin ? '*'.repeat(ussdInputVal.length) : ussdInputVal;
     }
 
     function resetEntireSystem() {
-        playKeyBeep(400, 0.1);
-        dialBuffer = '*120#';
-        endUSSDSession();
-        totalBytes = 0;
-        $('p1Stats').innerText = 'no traffic yet';
-        p2Index = 0;
-        $('p2EnvelopeIcon').classList.add('hidden');
-        $('p2AlertView').classList.add('hidden');$('p2SmsView').classList.remove('hidden');
-        renderP2();
-        toast('Phones reset');
+        pressEndButton();
+        refreshDashboard();
     }
 
-    function setReceiverPhone(v, fromUser) {
-        const n = String(v || '').replace(/\s/g, '');
-        if (!n) return;
-        let norm = n;
-        if (/^0\d{9}$/.test(n)) norm = '+263' + n.slice(1);
-        else if (/^263\d{9}$/.test(n)) norm = '+' + n;
-        receiverPhone = norm;
-        if (fromUser) followReceiver = false;
-        $('receiverNumInput').value = receiverPhone;
-        p2Index = 0;
-        firstSmsLoad = true;
-        updateP2FromSms();
-    }
-
-    function updateP2FromSms() {
-        const wanted = mask(receiverPhone);
-        const mine = smsCache.filter(m => m.to === wanted || m.to === receiverPhone);
-        let fresh = false;
-        mine.forEach(m => {
-            const key = m.sentAt + '|' + m.text;
-            if (!seenSms.has(key)) { seenSms.add(key); if (!firstSmsLoad) fresh = true; }
-        });
-        p2Messages = mine;
-        if (p2Index >= p2Messages.length) p2Index = 0;
-        renderP2();
-        if (fresh) {
-            p2Index = 0;
-            renderP2();
-            playRetroSMSChime();
-            $('p2EnvelopeIcon').classList.remove('hidden');$('p2SmsView').classList.add('hidden');
-            $('p2AlertView').classList.remove('hidden');$('p2AlertView').classList.add('flex');
-            if (window.innerWidth < 1024) setActivePhone(2);
-        }
-        firstSmsLoad = false;
-    }
-
-    function renderP2() {
-        $('p2SmsCount').innerText = p2Messages.length;
-        if (p2Flash) {
-            $('p2SmsHeader').innerText = 'Money Home';$('p2SmsBody').innerText = p2Flash;
-            return;
-        }
-        if (p2Messages.length === 0) {
-            $('p2SmsHeader').innerText = 'Inbox (0)';
-            $('p2SmsTime').innerText = '';$('p2SmsBody').innerText = 'No messages yet.\nWaiting for money from home...';
-            return;
-        }
-        const msg = p2Messages[p2Index];
-        $('p2SmsHeader').innerText = `Inbox (${p2Index + 1}/${p2Messages.length})`;
-        $('p2SmsTime').innerText = hhmm(msg.sentAt);$('p2SmsBody').innerText = msg.text;
-    }
-
-    function pressP2SoftKey(action) {
-        playKeyBeep(800, 0.04);
-        $('p2EnvelopeIcon').classList.add('hidden');$('p2AlertView').classList.add('hidden');
-        $('p2AlertView').classList.remove('flex');$('p2SmsView').classList.remove('hidden');
-        p2Flash = '';
-        if (action === 'BACK') p2Index = 0;
-        renderP2();
-    }
-
-    function navigateP2Sms(dir) {
-        playKeyBeep(700, 0.03);
-        p2Flash = '';
-        if (dir === 'UP' && p2Index > 0) p2Index--;
-        else if (dir === 'DOWN' && p2Index < p2Messages.length - 1) p2Index++;
-        renderP2();
-    }
-
-    async function collectCash() {
-        playKeyBeep(1000, 0.08);
-        const t = transfersCache.find(x => x.recipientPhone === receiverPhone && x.status === 'READY_TO_COLLECT');
-        if (!t) {
-            pressP2SoftKey('READ');
-            p2Flash = 'Nothing to collect yet.\nWe will SMS you when your money is ready.';
-            renderP2();
-            setTimeout(() => { p2Flash = ''; renderP2(); }, 3000);
-            return;
-        }
-        const r = await post('/api/collect', { ref: t.reference });
-        if (r.ok) {
-            pressP2SoftKey('READ');
-            p2Flash = `Cash collected!\n$${money(t.receiveUsd)}\nRef ${t.reference}`;
-            renderP2();
-            setTimeout(() => { p2Flash = ''; renderP2(); }, 4000);
-        } else {
-            toast(r.data.error || 'Could not collect');
-        }
-        refresh();
-    }
-
-    const STEPS = [['SENT', 'Sent'], ['IN_TRANSIT', 'In transit'], ['READY_TO_COLLECT', 'Ready to collect'], ['COLLECTED', 'Collected']];
-
-    function trackerItem(t) {
-        const bad = t.status === 'FAILED' || t.status === 'CANCELLED';
-        const idx = STEPS.findIndex(s => s[0] === t.status);
-        const dots = STEPS.map((s, i) => {
-            const done = !bad && i <= idx;
-            const cur = done && i === idx && t.status !== 'COLLECTED';
-            const color = done ? (cur ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500') : 'bg-slate-700';
-            return `<div class="flex flex-col items-center gap-1 flex-1 min-w-0">
-                        <div class="w-3 h-3 rounded-full ${color}"></div>
-                        <span class="text-[9px] leading-tight text-center ${done ? 'text-slate-200' : 'text-slate-500'}">${s[1]}</span>
-                    </div>`;
-        }).join('');
-        const badge = bad ? `<span class="text-[10px] font-bold text-rose-300 bg-rose-500/20 border border-rose-500/30 rounded px-1.5 py-0.5">${t.status}</span>` : '';
-        let buttons = '';
-        if (t.status === 'SENT' || t.status === 'IN_TRANSIT') {
-            buttons = `<button onclick="adminAdvance('${t.reference}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold">Advance <i class="fa-solid fa-forward-step"></i></button>
-                       <button onclick="adminFail('${t.reference}')" class="px-2 py-1 rounded bg-rose-700/70 hover:bg-rose-600 text-white text-[11px] font-bold">Fail</button>`;
-        } else if (t.status === 'READY_TO_COLLECT') {
-            buttons = `<button onclick="adminAdvance('${t.reference}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold">Mark collected</button>`;
-        }
-        return `<div class="bg-slate-800/70 border border-slate-700 rounded-xl p-3">
-            <div class="flex items-center justify-between gap-2 mb-2">
-                <span class="font-mono font-bold text-emerald-300 text-sm">${esc(t.reference)}</span>
-                ${badge}
-                <span class="text-[10px] text-slate-400 font-mono">updated ${hhmm(t.updatedAt)}</span>
-            </div>
-            <div class="text-[11px] text-slate-300 mb-2 font-mono">
-                You paid R${money(t.totalZar)} (R${money(t.amountZar)} + R${money(t.feeZar)} fee) &rarr;
-                <strong class="text-white">$${money(t.receiveUsd)}</strong> to ${esc(t.recipient)} @ R${money(t.rate)}/$1
-            </div>
-            <div class="flex items-start gap-1 mb-2">${dots}</div>
-            <div class="flex gap-2 justify-end">${buttons}</div>
-        </div>`;
-    }
-
-    function renderTracker() {
-        const el = $('trackerList');
-        if (!transfersCache.length) {
-            el.innerHTML = '<div class="text-xs text-slate-500 italic py-6 text-center">No transfers yet. Dial *120# on the sender phone and send some money.</div>';
-            return;
-        }
-        el.innerHTML = transfersCache.map(trackerItem).join('');
-    }
-
-    function renderSms() {
-        const el = $('smsList');$('smsTotal').innerText = smsCache.length;
-        if (!smsCache.length) {
-            el.innerHTML = '<div class="text-xs text-slate-500 italic py-6 text-center">No SMS sent yet.</div>';
-            return;
-        }
-        const sMask = mask(senderPhone), rMask = mask(receiverPhone);
-        el.innerHTML = smsCache.map(m => {
-            const role = m.to === rMask ? 'receiver' : (m.to === sMask ? 'sender' : '');
-            const chip = role ? `<span class="text-[9px] uppercase font-bold ${role === 'receiver' ? 'text-indigo-300' : 'text-emerald-300'}">${role}</span>` : '';
-            const ok = m.length <= 160 && m.gsm7;
-            return `<div class="bg-slate-800/70 border border-slate-700 rounded-lg p-2.5">
-                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
-                    <span>${hhmm(m.sentAt)} &rarr; ${esc(m.to)} ${chip}</span>
-                    <span class="${ok ? 'text-emerald-400' : 'text-rose-400'}">${m.length}/160 ${m.gsm7 ? 'GSM-7' : 'NOT GSM-7'}</span>
-                </div>
-                <div class="text-xs text-slate-200 whitespace-pre-wrap">${esc(m.text)}</div>
-            </div>`;
-        }).join('');
-    }
-
-    function renderFx() {
-        if (!rateInfo) return;
-        $('fxMid').innerText = money(rateInfo.midMarketRate);
-        $('fxOurs').innerText = money(rateInfo.ourRate);$('fxMargin').innerText = money(rateInfo.marginZarPerUsd);
-        const pts = rateHistory;
-        if (pts.length < 2) return;
-        const min = Math.min(...pts), max = Math.max(...pts);
-        const span = Math.max(max - min, 0.05);
-        const path = pts.map((v, i) => {
-            const x = (i / (pts.length - 1)) * 200;
-            const y = 36 - ((v - min) / span) * 32;
-            return x.toFixed(1) + ',' + y.toFixed(1);
-        }).join(' ');
-        $('fxSpark').setAttribute('points', path);
-    }
-
-    function setOnline(v) {
-        online = v;
-        const b = $('serverBadge');
-        b.innerText = v ? 'backend online' : 'backend offline';
-        b.className = 'text-[10px] font-mono px-2 py-0.5 rounded border ' +
-            (v ? 'border-emerald-500/40 text-emerald-300 bg-emerald-500/10' : 'border-rose-500/40 text-rose-300 bg-rose-500/10');
-    }
-
-    let autoInitialised = false;
-    let refreshing = false;
-    async function refresh() {
-        if (refreshing) return;
-        refreshing = true;
-        try {
-            const [rate, transfers, sms] = await Promise.all([getJson('/api/rate'), getJson('/api/transfers'), getJson('/api/sms')]);
-            setOnline(true);
-            rateInfo = rate;
-            rateHistory.push(Number(rate.ourRate));
-            if (rateHistory.length > 60) rateHistory.shift();
-            transfersCache = transfers;
-            smsCache = sms;
-            if (!autoInitialised) {
-                $('autoEnabled').checked = rate.scheduler.auto;
-                $('autoSeconds').value = rate.scheduler.seconds;
-                $('autoCollect').checked = rate.scheduler.autoCollect;
-                autoInitialised = true;
-            }
-            if (followReceiver) {
-                const last = transfers.find(t => t.senderPhone === senderPhone);
-                if (last && last.recipientPhone !== receiverPhone) setReceiverPhone(last.recipientPhone, false);
-            }
-            renderTracker();
-            renderSms();
-            renderFx();
-            updateP2FromSms();
-        } catch (e) {
-            setOnline(false);
-        } finally {
-            refreshing = false;
-        }
-    }
-
-    async function adminAdvance(ref) {
-        const r = await post('/admin/advance', { ref });
-        if (!r.ok) toast(r.data.error || 'Could not advance');
-        refresh();
-    }
-    async function adminFail(ref) {
-        const r = await post('/admin/status', { ref, status: 'FAILED' });
-        if (!r.ok) toast(r.data.error || 'Could not fail');
-        refresh();
-    }
-    async function saveAuto() {
-        await post('/admin/auto', {
-            enabled: $('autoEnabled').checked,
-            seconds: $('autoSeconds').value || '10',
-            collect: $('autoCollect').checked
-        });
-        toast('Saved');
-    }
-
-    function toggleFxModal() {
-        const modal = $('fxModal');
-        modal.classList.toggle('hidden');
-        if (!modal.classList.contains('hidden')) { fillRuleText(); runCalc(); }
-    }
-
-    function fillRuleText() {
-        if (!rateInfo) return;
-        $('ruleText').innerText =
-            `Fee: ${rateInfo.feePercent}% of the amount, at least R${rateInfo.minFeeZar}, at most R${rateInfo.maxFeeZar}. ` +
-            `You can send R${rateInfo.minZar} to R${rateInfo.maxZar}. Our rate is the market rate plus a small margin, shown below.`;
-    }
-
-    const CALC_ERRORS = {
-        'error.min_amount': 'Below the minimum amount.',
-        'error.max_amount': 'Above the maximum amount.',
-        'error.invalid_amount': 'Enter a valid amount.',
-        'error.rate_expired': 'The rate expired, try again.'
-    };
-
-    async function runCalc() {
-        const v = $('calcAmount').value;
-        const out = $('calcOut');
-        try {
-            const r = await fetch(API + '/api/quote?amount=' + encodeURIComponent(v), { cache: 'no-store' });
-            const q = await r.json();
-            if (!r.ok) { out.innerHTML = `<div class="text-rose-300">${esc(CALC_ERRORS[q.error] || q.error)}</div>`; return; }
-            const row = (a, b, strong) => `<div class="flex justify-between ${strong ? 'font-bold text-white border-t border-slate-700 pt-1 mt-1' : ''}"><span>${a}</span><span class="font-mono">${b}</span></div>`;
-            out.innerHTML =
-                row('You send', 'R' + money(q.amountZar)) +
-                row('Our fee', 'R' + money(q.feeZar)) +
-                row('You pay in total', 'R' + money(q.totalZar), true) +
-                row('Market rate', 'R' + money(q.midMarketRate) + ' = $1') +
-                row('Our rate', 'R' + money(q.rate) + ' = $1') +
-                row('They receive', '$' + money(q.receiverGetsUsd), true) +
-                `<div class="text-[10px] text-slate-500 mt-1">Rate held until ${hhmm(q.rateExpiresAt)}</div>`;
-        } catch (e) {
-            out.innerHTML = '<div class="text-rose-300">Backend offline.</div>';
-        }
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.target && e.target.matches && e.target.matches('input, select, textarea')) return;
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            if (e.target && e.target.blur) e.target.blur();
-            if (e.key === ' ') return;
-        }
-        if ((e.key >= '0' && e.key <= '9') || e.key === '*' || e.key === '#') pressNumpad(e.key);
-        else if (e.key === 'Enter') pressCallButton();
-        else if (e.key === 'Escape') pressEndButton();
-        else if (e.key === 'ArrowUp') pressDPad('UP');
-        else if (e.key === 'ArrowDown') pressDPad('DOWN');
-        else if (e.key === 'ArrowLeft') pressSoftKey('LEFT');
-        else if (e.key === 'ArrowRight' || e.key === 'Backspace') pressSoftKey('RIGHT');
+    detectApi().then(() => {
+        refreshDashboard();
+        setInterval(refreshDashboard, 2000);
     });
-
-    renderBars();
-    $('senderNumLabel').innerText = senderPhone;
-    $('receiverNumInput').value = receiverPhone;
-    $('p1DialBuffer').innerText = dialBuffer;
-    renderP2();
-    detectApi().then(() => { refresh(); setInterval(refresh, 1500); });
 </script>
 </body>
 </html>
