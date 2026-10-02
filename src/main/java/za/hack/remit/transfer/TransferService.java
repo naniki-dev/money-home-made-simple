@@ -92,7 +92,7 @@ public class TransferService {
             if (!t.getStatus().canMoveTo(next)) {
                 throw new IllegalStateException("Move not allowed: " + t.getStatus() + " to " + next);
             }
-            t.setStatus(next);
+            moveTo(t, next);      // <-- this line, not t.setStatus(next)
             return t;
         }
     }

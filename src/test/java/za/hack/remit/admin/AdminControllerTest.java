@@ -14,8 +14,6 @@ import za.hack.remit.notify.ReceiverStatusNotifier;
 import za.hack.remit.notify.SenderStatusNotifier;
 import za.hack.remit.notify.SmsSimulator;
 import za.hack.remit.notify.StatusMessages;
-import za.hack.remit.transfer.Recipient;
-import za.hack.remit.transfer.Terms;
 import za.hack.remit.transfer.TransferService;
 import za.hack.remit.transfer.TransferStatus;
 
@@ -36,10 +34,9 @@ class AdminControllerTest {
         transfers = new TransferService();
         transfers.addListener(new SenderStatusNotifier(sms, StatusMessages::forSender));
         transfers.addListener(new ReceiverStatusNotifier(sms, StatusMessages::forReceiver));
-        reference = transfers.create("s1", SENDER, new Recipient("Mama", RECEIVER), "en",
-                new Terms(new BigDecimal("500.00"), new BigDecimal("25.00"), new BigDecimal("525.00"),
-                        new BigDecimal("17.80"), new BigDecimal("28.09"))).getReference();
-        app = Javalin.create();
+        reference = transfers.create("s1", SENDER, "Mama", RECEIVER, "en",
+                new BigDecimal("500.00"), new BigDecimal("25.00"), new BigDecimal("525.00"),
+                new BigDecimal("17.80"), new BigDecimal("28.09")).getReference();app = Javalin.create();
         new AdminController(transfers, sms, configuredKey).register(app);
         app.start(0);
         port = app.port();

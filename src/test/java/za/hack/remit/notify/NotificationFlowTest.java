@@ -13,8 +13,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import za.hack.remit.transfer.Recipient;
-import za.hack.remit.transfer.Terms;
 import za.hack.remit.transfer.Transfer;
 import za.hack.remit.transfer.TransferService;
 import za.hack.remit.transfer.TransferStatus;
@@ -25,9 +23,6 @@ class NotificationFlowTest {
     private static final String RECEIVER = "+263771234567";
     private static final String SENDER_MASKED = "+278*****567";
     private static final String RECEIVER_MASKED = "+263******567";
-    private static final Terms TERMS = new Terms(new BigDecimal("500.00"), new BigDecimal("25.00"),
-            new BigDecimal("525.00"), new BigDecimal("17.80"), new BigDecimal("28.09"));
-
     private SmsSimulator sms;
     private TransferService svc;
 
@@ -39,8 +34,14 @@ class NotificationFlowTest {
         svc.addListener(new ReceiverStatusNotifier(sms, StatusMessages::forReceiver));
     }
 
+    private Transfer createOn(TransferService service, String session, String name) {
+        return service.create(session, SENDER, name, RECEIVER, "en",
+                new BigDecimal("500.00"), new BigDecimal("25.00"), new BigDecimal("525.00"),
+                new BigDecimal("17.80"), new BigDecimal("28.09"));
+    }
+
     private Transfer make(String session, String name) {
-        return svc.create(session, SENDER, new Recipient(name, RECEIVER), "en", TERMS);
+        return createOn(svc, session, name);
     }
 
     /** Messages sent to one (masked) number, oldest first. */
@@ -118,7 +119,7 @@ class NotificationFlowTest {
         });
         local.addListener(new SenderStatusNotifier(sms, StatusMessages::forSender));
 
-        Transfer t = local.create("s1", SENDER, new Recipient("Mama", RECEIVER), "en", TERMS);
+        Transfer t = createOn(local, "s1", "Mama");
         assertEquals(1, textsTo(SENDER_MASKED).size());
         local.advance(t.getReference());
         assertEquals(TransferStatus.IN_TRANSIT, t.getStatus());
