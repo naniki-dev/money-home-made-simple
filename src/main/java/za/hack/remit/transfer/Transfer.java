@@ -52,7 +52,7 @@ public class Transfer {
     public BigDecimal getRate() { return rate; }
     public BigDecimal getReceiveAmountUsd() { return receiveAmountUsd; }
     public Instant getUpdatedAt() { return updatedAt; }
-
+    public String getSenderPhone() { return senderPhone; }
     // No "public": only TransferService, in this same package, can change the status.
     void setStatus(TransferStatus newStatus) {
         this.status = newStatus;

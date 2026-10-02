@@ -60,7 +60,7 @@ public class RecurringService {
             LocalDate sendDate = ym.atDay(p.sendDay);
             if (today.equals(sendDate.minusDays(1)) && !ym.equals(p.remindedMonth)
                     && !ym.equals(p.skippedMonth)) {
-                var q = quotes.quote(p.amountZar);
+                var q = quotes.quote(p.amountZar, );
                 sms.send(p.senderPhone,
                         "Remit: R" + p.amountZar + " goes home tomorrow (est. $" + q.receiveUsd()
                                 + "). To skip dial *120*3#");
