@@ -1,0 +1,94 @@
+/* Money Home: orange & white theme.
+   Colours only. No layout, no markup, no JavaScript is touched.
+   Loaded AFTER Tailwind; every rule uses !important so it wins over the CDN styles. */
+
+:root {
+    --o: #FF6600;        /* brand orange (casings, accents)        */
+    --o-head: #EA580C;   /* header/footer: a touch deeper so white text stays readable */
+    --o-dark: #C2410C;   /* orange text on white                   */
+    --o-deep: #7C2D12;   /* dark brown-orange for labels            */
+    --o-soft: #FFF7ED;   /* very light orange card fill             */
+    --o-chip: #FFEDD5;   /* chips and hover                         */
+    --o-line: #FED7AA;   /* borders                                 */
+    --ink: #3B1D08;      /* main text                               */
+    --mute: #9A5B3A;     /* secondary text                          */
+}
+
+::selection { background: var(--o); color: #fff; }
+
+/* ---------- page and text ---------- */
+.bg-slate-950 { background: #fff !important; }
+body { color: var(--ink) !important; }
+.text-slate-100, .text-slate-200, .text-white { color: var(--ink) !important; }
+.text-slate-300 { color: var(--o-deep) !important; }
+.text-slate-400, .text-slate-500 { color: var(--mute) !important; }
+
+/* ---------- accent colours (green/indigo/amber all become orange) ---------- */
+.text-emerald-400, .text-indigo-400, .text-amber-400 { color: var(--o-dark) !important; }
+.text-emerald-300 { color: var(--o-dark) !important; }
+.text-amber-300 { color: var(--o-deep) !important; }
+.text-rose-300 { color: #BE123C !important; }          /* "offline" stays red: it is a warning */
+.bg-emerald-400, .bg-indigo-400 { background: var(--o) !important; }
+.bg-emerald-500\/10, .bg-emerald-500\/20 { background: var(--o-chip) !important; }
+.border-emerald-500\/30, .border-emerald-500\/40 { border-color: #FDBA74 !important; }
+.bg-amber-500\/20 { background: var(--o-chip) !important; }
+.border-amber-500\/30 { border-color: #FDBA74 !important; }
+.bg-rose-500\/10 { background: #FEE2E2 !important; }
+.border-rose-500\/40 { border-color: #FCA5A5 !important; }
+
+/* ---------- cards and surfaces ---------- */
+.bg-slate-900\/80 { background: #fff !important; }
+.bg-slate-900 { background: #fff !important; }          /* screen bezel + speaker slot */
+.bg-slate-800, .bg-slate-800\/70, .bg-slate-800\/50 { background: var(--o-soft) !important; }
+.hover\:bg-slate-700:hover { background: var(--o-chip) !important; }
+.border-slate-800, .border-slate-700 { border-color: var(--o-line) !important; }
+.border-slate-600 { border-color: #FDBA74 !important; }
+code { background: var(--o-chip) !important; color: var(--o-dark) !important; }
+#fxSpark { stroke: var(--o) !important; }
+
+/* ---------- header ---------- */
+header.bg-slate-900\/90 { background: var(--o-head) !important; border-color: var(--o-dark) !important; }
+header h1, header .text-white { color: #fff !important; }
+header p.text-slate-400 { color: #fff !important; }
+header .bg-emerald-500\/10 { background: rgba(255, 255, 255, .2) !important; }
+header .border-emerald-500\/30 { border-color: rgba(255, 255, 255, .6) !important; }
+header .text-emerald-400 { color: #fff !important; }
+header h1 .bg-emerald-500\/20 { background: #fff !important; border-color: #fff !important; color: var(--o-dark) !important; }
+header .bg-slate-800 { background: #fff !important; }
+header .text-slate-300, header .text-slate-200 { color: var(--o-deep) !important; }
+header button .text-emerald-400, header label .text-amber-400 { color: var(--o) !important; }
+header .bg-rose-500\/20 { background: var(--o-deep) !important; }
+header .border-rose-500\/30 { border-color: var(--o-deep) !important; }
+header .text-rose-300 { color: #fff !important; }
+header .hover\:bg-rose-500\/30:hover { background: #431407 !important; }
+
+/* ---------- phones ---------- */
+.bg-phoneCasingP1 { background: var(--o) !important; }
+.bg-phoneCasingP2 { background: #E8590C !important; }
+.rounded-\[42px\] { border-color: var(--o-dark) !important; }
+.shadow-phone-shadow { box-shadow: 0 25px 50px -12px rgba(194, 65, 12, .45), 0 0 30px rgba(255, 102, 0, .2) !important; }
+.font-pixel.text-slate-400 { color: #fff !important; }   /* "R200 PHONE" label on the orange body */
+.bg-slate-900.border-2 { border-color: #fff !important; }
+
+/* LCD screens: warm white instead of green */
+.lcd-screen { box-shadow: inset 0 0 14px rgba(194, 65, 12, .25) !important; }
+.lcd-screen-p1 { background-color: #FFF4EA !important; color: var(--ink) !important; }
+.lcd-screen-p2 { background-color: #FFE8D2 !important; color: var(--ink) !important; }
+.text-lcdText { color: var(--ink) !important; }
+.border-lcdText\/30, .border-lcdText\/40 { border-color: rgba(194, 65, 12, .35) !important; }
+.bg-lcdText\/10 { background: rgba(255, 102, 0, .12) !important; }
+.lcd-scroll::-webkit-scrollbar-thumb { background: rgba(194, 65, 12, .5) !important; }
+
+/* keys: white with an orange edge; CALL and END are the strong colours */
+.physical-key.bg-slate-800 { background: #fff !important; color: var(--o-deep) !important; border-color: #FDBA74 !important; }
+.physical-key.bg-slate-800:hover { background: var(--o-chip) !important; }
+.bg-emerald-700 { background: var(--o-dark) !important; }
+.hover\:bg-emerald-600:hover { background: #9A3412 !important; }
+.text-emerald-100, .text-rose-100 { color: #fff !important; }
+.border-emerald-500, .border-rose-600 { border-color: #FDBA74 !important; }
+.bg-rose-800 { background: var(--o-deep) !important; }
+.hover\:bg-rose-700:hover { background: #431407 !important; }
+
+/* ---------- footer ---------- */
+footer.bg-slate-950\/90 { background: var(--o-head) !important; border-color: var(--o-dark) !important; }
+footer.text-slate-500 { color: #fff !important; }
