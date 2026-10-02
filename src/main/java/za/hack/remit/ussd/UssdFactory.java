@@ -6,6 +6,8 @@ import java.util.List;
 import za.hack.remit.fees.QuoteCalculator;
 import za.hack.remit.fx.FxService;
 import za.hack.remit.i18n.Messages;
+import za.hack.remit.recurring.DemoDate;
+import za.hack.remit.recurring.RecurringService;
 import za.hack.remit.security.PinService;
 import za.hack.remit.security.RateLimiter;
 import za.hack.remit.transfer.TransferService;
@@ -14,6 +16,16 @@ import za.hack.remit.ussd.screens.*;
 /** P1 calls this from Main with the REAL services. pins may be null = no PIN step. */
 public final class UssdFactory {
     private UssdFactory() {}
+
+    /**
+     * Overload used by Main. recurring and demoDate are accepted so Main compiles, but no USSD screen uses them yet
+     * (there is no "monthly payment" menu item). Wire them into a RecurringScreen here when that screen is built.
+     */
+    public static UssdController create(Messages m, FxService fx, QuoteCalculator quotes,
+                                        TransferService transfers, RecurringService recurring, DemoDate demoDate,
+                                        PinService pinsOrNull, RateLimiter limiter) {
+        return create(m, fx, quotes, transfers, pinsOrNull, limiter);
+    }
 
     public static UssdController create(Messages m, FxService fx, QuoteCalculator quotes,
                                         TransferService transfers, PinService pinsOrNull,

@@ -51,6 +51,7 @@ public class Transfer {
     public BigDecimal getTotalZar() { return totalZar; }
     public BigDecimal getRate() { return rate; }
     public BigDecimal getReceiveAmountUsd() { return receiveAmountUsd; }
+    public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
     public String getSenderPhone() { return senderPhone; }
     // No "public": only TransferService, in this same package, can change the status.

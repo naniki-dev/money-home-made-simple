@@ -17,7 +17,6 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,28 +43,15 @@ class RecurringServiceTest {
         }
     }
 
-    /** The real TransferService, plus all(): every transfer created so far. */
-    static class TrackingTransfers extends TransferService {
-        private final List<Transfer> created = new CopyOnWriteArrayList<>();
-
-        TrackingTransfers() {
-            // from == null means "just created". If TransferListener has more than one method,
-            // replace this lambda with an anonymous class.
-            addListener((t, from, to) -> { if (from == null) created.add(t); });
-        }
-
-        List<Transfer> all() { return List.copyOf(created); }
-    }
-
     private RecordingSms sms;
-    private TrackingTransfers transfers;
+    private TransferService transfers;
     private RecurringService recurring;
 
     @BeforeEach
     void setUp() {
         MockFxService fx = new MockFxService();   // not started: the rate stays fixed
         sms = new RecordingSms();
-        transfers = new TrackingTransfers();
+        transfers = new TransferService();
         recurring = new RecurringService(transfers, new DefaultQuoteCalculator(), sms, fx);
         recurring.setup(PHONE, RECIPIENT, new BigDecimal("500"), 15);
     }

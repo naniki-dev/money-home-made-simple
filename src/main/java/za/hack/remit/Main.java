@@ -56,7 +56,7 @@ public class Main {
         SmsSimulator sms = new SmsSimulator();
         TransferService transfers = new TransferService();
         DemoDate demoDate = new DemoDate();
-        RecurringService recurring = new RecurringService(transfers, quotes, sms, fx, messages);
+        RecurringService recurring = new RecurringService(transfers, quotes, sms, fx);
         PinService pins = usePin ? new SimplePinService() : null;
         UssdController ussd = UssdFactory.create(messages, fx, quotes, transfers, recurring, demoDate, pins,
                 new SlidingWindowRateLimiter(60, Duration.ofMinutes(1)));
@@ -122,7 +122,7 @@ public class Main {
         app.start(port);
 
         System.out.println();
-        System.out.println("  Money Home is running:  http://localhost:" + port + "/live.html");
+        System.out.println("  Money Home is running:  http://localhost:" + port + "/index.html");
         System.out.println("  PIN step: " + (usePin ? "ON (first PIN entered by a phone becomes its PIN)" : "OFF"));
         if (generatedKey) System.out.println("  ADMIN KEY (random, this run only): " + adminKey);
         System.out.println();

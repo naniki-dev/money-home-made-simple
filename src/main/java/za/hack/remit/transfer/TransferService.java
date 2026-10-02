@@ -67,6 +67,13 @@ public class TransferService {
         return Optional.ofNullable(byReference.get(normalise(reference)));
     }
 
+    /** Every transfer, newest first. For the admin/demo panel only. Never expose this to a customer screen. */
+    public List<Transfer> all() {
+        return byReference.values().stream()
+                .sorted(java.util.Comparator.comparing(Transfer::getCreatedAt).reversed())
+                .toList();
+    }
+
     /** Transfers that can still move forward. */
     List<Transfer> listActive() {
         return byReference.values().stream()
