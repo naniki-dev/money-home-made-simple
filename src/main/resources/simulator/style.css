@@ -1,130 +1,155 @@
+/* =====================================================================
+   Money Home: Mukuru colours (bright orange, white, a little navy)
+   Loaded by index.html. The page is built with Tailwind classes, so this file re-colours them.
+   To change the whole look, change the 8 variables below. Nothing else needs to move.
+   ===================================================================== */
 :root {
-    --mukuru-orange: #FF6600;
-    --mukuru-orange-hover: #E05500;
-    --mukuru-navy: #0A192F;
-    --mukuru-dark: #121A24;
-    --mukuru-light-bg: #F4F6F9;
-    --mukuru-screen-bg: #FFFFFF;
-    --text-dark: #1F2937;
-    --text-muted: #6B7280;
+    --orange:        #FF6600;   /* bright Mukuru orange: buttons, highlights */
+    --orange-hover:  #E05500;
+    --orange-text:   #B34200;   /* orange for SMALL text on white (readable) */
+    --orange-soft:   #FFF1E6;   /* very light orange: cards, rows */
+    --navy:          #0A192F;   /* phone bodies, header, footer, text */
+    --navy-2:        #14284B;   /* keys on the phones */
+    --navy-3:        #1E3A66;
+    --white:         #FFFFFF;
+    --page:          #F4F6F9;   /* page background */
+    --line:          #E3E8EF;   /* thin borders on white */
+    --muted:         #5B6B82;   /* secondary text on white */
+    --on-navy:       #B8C4D8;   /* secondary text on navy */
 }
 
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--mukuru-light-bg);
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-}
+/* ---------- page: white, navy text ---------- */
+body { background: var(--page); color: var(--navy); }
+body.bg-slate-950, body .bg-slate-950 { background-color: var(--page); }
+body ::selection { background: var(--orange); color: var(--white); }
 
-/* Outer phone container styled with Mukuru Navy */
-.phone {
-    width: 360px;
-    background: var(--mukuru-navy);
-    padding: 24px 20px 28px 20px;
-    border-radius: 36px;
-    box-shadow: 0 20px 40px rgba(10, 25, 47, 0.3);
-}
+/* ---------- LIGHT areas (panels, labels, modal): slate -> navy / white ---------- */
+body .bg-slate-900\/80, body .bg-slate-900 { background-color: var(--white); }
+body .bg-slate-800, body .bg-slate-800\/50 { background-color: var(--page); }
+body .bg-slate-800\/70 { background-color: var(--orange-soft); }
+body .bg-slate-700 { background-color: #D5DCE6; }          /* "not reached yet" dots */
+body .border-slate-700, body .border-slate-800, body .border-slate-600,
+body .border-slate-700\/50 { border-color: var(--line); }
 
-.phone-header {
-    color: #FFFFFF;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 16px;
-    padding: 0 4px;
-}
+body .text-white, body .text-slate-100, body .text-slate-200 { color: var(--navy); }
+body .text-slate-300 { color: #33476B; }
+body .text-slate-400 { color: var(--muted); }
+body .text-slate-500 { color: #6F7F96; }
 
-.phone-header .brand {
-    color: var(--mukuru-orange);
-    font-weight: 800;
-}
+body .text-emerald-300, body .text-emerald-400, body .text-amber-300, body .text-amber-400 { color: var(--orange-text); }
+body .text-indigo-300, body .text-indigo-400 { color: var(--navy-3); }
+body .text-rose-300, body .text-rose-400 { color: #B42318; }
 
-/* Feature Phone / USSD Display Screen */
-.screen {
-    background: var(--mukuru-screen-bg);
-    min-height: 380px;
-    padding: 20px;
-    border-radius: 16px;
-    box-sizing: border-box;
-    border: 2px solid rgba(255, 102, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
+body .bg-emerald-400, body .bg-emerald-500 { background-color: var(--orange); }          /* done dots, live dot */
+body .bg-amber-400 { background-color: #FF9A55; }                                        /* "in progress" dot */
+body .bg-indigo-400 { background-color: var(--navy-3); }
+body .bg-emerald-500\/10 { background-color: var(--orange-soft); }
+body .bg-emerald-500\/20 { background-color: var(--orange-soft); }
+body .border-emerald-500, body .border-emerald-500\/30, body .border-emerald-500\/40 { border-color: rgba(255,102,0,.45); }
+body .bg-rose-500\/20 { background-color: rgba(180,35,24,.10); }
+body .border-rose-500\/30, body .border-rose-500\/40 { border-color: rgba(180,35,24,.35); }
 
-.ussd-code {
-    background: var(--mukuru-navy);
-    color: var(--mukuru-orange);
-    font-weight: 700;
-    font-size: 14px;
-    padding: 6px 12px;
-    border-radius: 8px;
-    display: inline-block;
-    align-self: flex-start;
-    margin-bottom: 16px;
-}
+/* orange buttons carry NAVY text: white on bright orange is too faint to read on a small, dim screen */
+body .bg-emerald-600, body .bg-emerald-700 { background-color: var(--orange); color: var(--navy); }
+body .hover\:bg-emerald-500:hover, body .hover\:bg-emerald-600:hover { background-color: var(--orange-hover); color: var(--navy); }
+body .bg-rose-700\/70 { background-color: #B42318; color: var(--white); }
+body .hover\:bg-rose-600:hover { background-color: #912018; }
+body .hover\:text-white:hover { color: var(--navy); }
 
-#ussd-message {
-    color: var(--text-dark);
-    line-height: 1.6;
-    font-size: 15px;
-    flex-grow: 1;
-}
+/* the orange accents on white cards */
+body #fxMid, body #fxOurs, body #fxMargin { color: var(--navy); }
+body #fxOurs { color: var(--orange-text); }
+#fxSpark { stroke: var(--orange); }
+body input[type=number], body input[type=text] { background-color: var(--white); color: var(--navy); border-color: #C9D2DF; }
+body input[type=checkbox] { accent-color: var(--orange); }
+body .focus\:border-indigo-400:focus { border-color: var(--orange); }
 
-#ussd-message strong {
-    color: var(--mukuru-orange);
-}
+/* ---------- DARK areas (header, footer, toast, the phones): navy ---------- */
+body header, body footer { background-color: var(--navy); border-color: var(--navy-3); }
+body header { border-bottom: 3px solid var(--orange); }
+body footer { color: var(--on-navy); }
+body #toast { background-color: var(--navy); border-color: var(--orange); color: var(--white); }
 
-#input-display {
-    margin-top: 16px;
-    padding: 8px 12px;
-    background: #F9FAFB;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--mukuru-navy);
-    min-height: 24px;
-    letter-spacing: 2px;
-}
+body header .text-white, body header .text-slate-100, body header .text-slate-200, body header h1,
+body [class*="bg-phoneCasing"] .text-white, body [class*="bg-phoneCasing"] .text-slate-100,
+body [class*="bg-phoneCasing"] .text-slate-200, body #toast.text-slate-100 { color: var(--white); }
+body header .text-slate-300, body [class*="bg-phoneCasing"] .text-slate-300 { color: #D5DCE8; }
+body header .text-slate-400, body header .text-slate-500, body footer .text-slate-500,
+body [class*="bg-phoneCasing"] .text-slate-400, body [class*="bg-phoneCasing"] .text-slate-500 { color: var(--on-navy); }
+body header .text-emerald-400, body header .text-emerald-300, body header .text-amber-400,
+body [class*="bg-phoneCasing"] .text-emerald-400 { color: var(--orange); }
 
-/* Keypad Styling */
-.keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-top: 20px;
-}
+body header .bg-slate-800, body header .bg-slate-700 { background-color: var(--navy-2); }
+body header .bg-slate-800:hover, body header .hover\:bg-slate-700:hover { background-color: var(--navy-3); }
+body header .border-slate-700, body header .border-slate-800 { border-color: var(--navy-3); }
+body header .bg-emerald-500\/10 { background-color: rgba(255,102,0,.15); }
+body header .bg-emerald-500\/20 { background-color: rgba(255,102,0,.2); }
+body header .border-emerald-500\/30 { border-color: rgba(255,102,0,.5); }
+body header select { background-color: var(--navy-2); color: var(--white); }
 
-.keypad button {
-    height: 52px;
-    border-radius: 12px;
-    border: none;
-    background: var(--mukuru-dark);
-    color: #FFFFFF;
-    font-size: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s ease-in-out;
-}
+/* header buttons: "Drop signal" and "Fees & Rate" are the orange ones */
+body header .bg-amber-500\/20 { background-color: rgba(255,102,0,.18); }
+body header .border-amber-500\/30 { border-color: rgba(255,102,0,.55); }
+body header .text-amber-300 { color: #FFB27A; }
+body header .hover\:bg-amber-500\/30:hover { background-color: rgba(255,102,0,.32); }
+body header .bg-indigo-600\/30 { background-color: var(--orange); }
+body header .hover\:bg-indigo-600\/40:hover { background-color: var(--orange-hover); }
+body header .text-indigo-300 { color: var(--navy); }
+body header .border-indigo-500\/30 { border-color: var(--orange); }
+body header .bg-rose-500\/20 { background-color: rgba(255,255,255,.08); }
+body header .text-rose-300 { color: #FFB4A8; }
+body header .border-rose-500\/30 { border-color: rgba(255,180,168,.4); }
+body header .hover\:bg-rose-500\/30:hover { background-color: rgba(255,255,255,.16); }
+body header .bg-slate-700 { background-color: var(--navy-3); }                    /* phone switcher on small screens */
+body header .bg-emerald-500 { background-color: var(--orange); color: var(--navy); }
+body header .bg-indigo-500 { background-color: var(--navy-3); color: var(--white); }
 
-.keypad button:hover {
-    background: var(--mukuru-orange);
-    transform: translateY(-1px);
+/* ---------- the two phones ---------- */
+body [class*="bg-phoneCasing"] {
+    background-color: var(--navy);
+    border-color: var(--orange);
+    box-shadow: 0 25px 50px -12px rgba(10,25,47,.5), 0 0 30px rgba(255,102,0,.2);
 }
+body [class*="bg-phoneCasing"] .bg-slate-900 { background-color: #071326; }
+body [class*="bg-phoneCasing"] .border-slate-800 { border-color: #050E1C; }
+body [class*="bg-phoneCasing"] .border-slate-700, body [class*="bg-phoneCasing"] .border-slate-600,
+body [class*="bg-phoneCasing"] .border-slate-500 { border-color: var(--navy-3); }
+body [class*="bg-phoneCasing"] .bg-slate-800 { background-color: var(--navy-2); }
+body [class*="bg-phoneCasing"] .bg-slate-700 { background-color: var(--navy-3); }
+body [class*="bg-phoneCasing"] .bg-slate-400 { background-color: var(--on-navy); }
+body [class*="bg-phoneCasing"] .hover\:bg-slate-700:hover,
+body [class*="bg-phoneCasing"] .hover\:bg-slate-600:hover { background-color: #2A4A7F; }
+body [class*="bg-phoneCasing"] .physical-key:active { background-color: var(--navy); }
 
-.keypad button:active {
-    transform: translateY(1px);
-}
+/* CALL, OK and COLLECT CASH are orange; END stays red so it still reads as "hang up" */
+body [class*="bg-phoneCasing"] .bg-emerald-600, body [class*="bg-phoneCasing"] .bg-emerald-700,
+body [class*="bg-phoneCasing"] .bg-indigo-700 { background-color: var(--orange); color: var(--navy); }
+body [class*="bg-phoneCasing"] .hover\:bg-emerald-500:hover, body [class*="bg-phoneCasing"] .hover\:bg-emerald-600:hover,
+body [class*="bg-phoneCasing"] .hover\:bg-indigo-600:hover { background-color: var(--orange-hover); }
+body [class*="bg-phoneCasing"] .border-emerald-500, body [class*="bg-phoneCasing"] .border-indigo-500 { border-color: #FF8A3D; }
+body [class*="bg-phoneCasing"] .text-emerald-100, body [class*="bg-phoneCasing"] .text-indigo-50 { color: var(--navy); }
+body [class*="bg-phoneCasing"] .bg-rose-800 { background-color: #B42318; }
+body [class*="bg-phoneCasing"] .hover\:bg-rose-700:hover { background-color: #912018; }
+body [class*="bg-phoneCasing"] .border-rose-600 { border-color: #D92D20; }
+body [class*="bg-phoneCasing"] .text-rose-100 { color: var(--white); }
 
-/* Action button overrides (* and #) */
-.keypad button:nth-child(10),
-.keypad button:nth-child(12) {
-    color: var(--mukuru-orange);
+/* the screens: white glass with navy text, orange soft-key */
+body .lcd-screen-p1 {
+    background-color: #FFF8F2;
+    background-image: linear-gradient(rgba(10,25,47,.045) 50%, transparent 50%);
+    color: var(--navy);
 }
+body .lcd-screen-p2 {
+    background-color: #F4F8FD;
+    background-image: linear-gradient(rgba(10,25,47,.045) 50%, transparent 50%);
+    color: var(--navy);
+}
+body .text-lcdText { color: var(--navy); }
+body .text-lcdText\/80 { color: rgba(10,25,47,.8); }
+body .border-lcdText\/30 { border-color: rgba(10,25,47,.3); }
+body .border-lcdText\/40 { border-color: rgba(10,25,47,.4); }
+body .bg-lcdText\/10 { background-color: rgba(255,102,0,.12); }
+body .lcd-screen .text-slate-900 { color: var(--orange-text); }                      /* new-SMS envelope */
+body #p1LeftSoftLabel, body #p2LeftSoftLabel { color: var(--orange-text); }
+body #p1UssdText strong, body #p2SmsBody strong { color: var(--orange-text); }
+body .lcd-scroll::-webkit-scrollbar-thumb { background: rgba(255,102,0,.6); }

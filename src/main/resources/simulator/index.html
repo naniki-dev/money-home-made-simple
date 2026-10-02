@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Feature Phone USSD & FX Transfer Simulator</title>
+    <meta name="theme-color" content="#FF6600">
+    <title>Money Home - USSD Simulator (*120#)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for icons -->
@@ -12,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <script>
-        tailwind.config = {
+        if (window.tailwind) tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
@@ -39,8 +40,9 @@
         }
     </script>
 
+    <link rel="stylesheet" href="style.css">
+
     <style>
-        /* Retro LCD Screen Scanlines & Glare Effects */
         .lcd-screen {
             background-size: 100% 4px, 6px 100%;
             position: relative;
@@ -74,7 +76,6 @@
             box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.4), inset 0px 2px 4px 0px rgba(0, 0, 0, 0.4) !important;
         }
 
-        /* Custom scrollbar for LCD menus */
         .lcd-scroll::-webkit-scrollbar {
             width: 3px;
         }
@@ -97,96 +98,93 @@
             </div>
             <div>
                 <h1 class="font-bold text-base sm:text-lg leading-tight tracking-tight text-white flex items-center gap-2">
-                    Retro Feature Phone Cross-Border USSD Simulator
-                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 font-mono px-2 py-0.5 rounded border border-emerald-500/30">FX & Total Deduction Calculator</span>
+                    Money Home: *120# USSD Simulator
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 font-mono px-2 py-0.5 rounded border border-emerald-500/30">Johannesburg &rarr; Harare</span>
                 </h1>
-                <p class="text-xs text-slate-400">Non-touch keypads, multi-currency conversion, fee breakdowns, and receiver SMS</p>
+                <p class="text-xs text-slate-400">A cheap phone, one bar of signal: every screen comes live from the Java backend</p>
             </div>
         </div>
 
-        <!-- Global Action Controls -->
         <div class="flex items-center gap-2 sm:gap-3 text-xs">
-            <!-- Sound Toggle -->
             <button id="soundToggleBtn" onclick="toggleSound()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700">
                 <i id="soundIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
                 <span class="hidden sm:inline font-mono">Audio FX</span>
             </button>
 
-            <!-- FX Config Drawer Toggle -->
-            <button onclick="toggleFxModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 transition-all font-semibold">
-                <i class="fa-solid fa-sliders text-xs"></i>
-                <span class="hidden sm:inline">FX Rates & Fees</span>
+            <label class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300">
+                <i class="fa-solid fa-signal text-amber-400"></i>
+                <select id="signalSelect" onchange="setSignal(this.value)" class="bg-slate-800 text-slate-200 font-mono text-xs focus:outline-none">
+                    <option value="4">4 bars</option>
+                    <option value="3">3 bars</option>
+                    <option value="2">2 bars</option>
+                    <option value="1">1 bar (poor)</option>
+                </select>
+            </label>
+            <button id="dropBtn" onclick="dropSignal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 transition-all font-semibold">
+                <i class="fa-solid fa-wifi text-xs"></i>
+                <span class="hidden sm:inline">Drop signal</span>
             </button>
 
-            <!-- Phone Switcher for Mobile Screens -->
+            <label class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300">
+                <i class="fa-solid fa-user text-emerald-400"></i>
+                <select id="customerSelect" onchange="setCustomer(this.value)" class="bg-slate-800 text-slate-200 font-mono text-xs focus:outline-none">
+                    <option value="thandi">Thandi</option>
+                    <option value="new">New customer</option>
+                </select>
+            </label>
+
+            <button onclick="toggleFxModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 transition-all font-semibold">
+                <i class="fa-solid fa-calculator text-xs"></i>
+                <span class="hidden sm:inline">Fees & Rate</span>
+            </button>
+
             <div class="lg:hidden flex bg-slate-800 p-1 rounded-lg border border-slate-700">
                 <button id="showPhone1Btn" onclick="setActivePhone(1)" class="px-2.5 py-1 font-semibold rounded bg-emerald-500 text-slate-950 transition-all text-xs">Sender (P1)</button>
                 <button id="showPhone2Btn" onclick="setActivePhone(2)" class="px-2.5 py-1 font-semibold rounded text-slate-400 hover:text-white transition-all text-xs">Receiver (P2)</button>
             </div>
 
-            <!-- Reset System Button -->
             <button onclick="resetEntireSystem()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition-all font-semibold active:scale-95">
                 <i class="fa-solid fa-rotate-right text-xs"></i>
-                <span>Reset</span>
+                <span>Reset phones</span>
             </button>
         </div>
     </div>
 </header>
 
-<!-- FX Rate Settings Drawer Modal -->
 <div id="fxModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
         <button onclick="toggleFxModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
             <i class="fa-solid fa-xmark text-lg"></i>
         </button>
         <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-coins text-emerald-400"></i> FX & Transfer Fee Configuration
+            <i class="fa-solid fa-coins text-emerald-400"></i> Fees &amp; rate: no surprises
         </h3>
-        <p class="text-xs text-slate-400 mb-4">Adjust currency base rates against 1 USD base and set fixed transfer fees.</p>
-
-        <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
-            <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Transfer Fee Rate (%)</label>
-                <input type="number" id="cfgFeePercent" step="0.1" value="1.5" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-emerald-400 font-mono">
-            </div>
-
-            <div class="border-t border-slate-800 pt-3">
-                <span class="text-xs font-bold text-slate-300 block mb-2">Currency Rates relative to 1 USD:</span>
-                <div class="grid grid-cols-2 gap-3 text-xs" id="currencyRatesInputs">
-                    <!-- Populated dynamically by JS -->
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-5 flex justify-end gap-3">
-            <button onclick="saveFxSettings()" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs transition-colors">
-                Save Rates
-            </button>
-        </div>
+        <p id="ruleText" class="text-xs text-slate-400 mb-4"></p>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Amount to send (Rand)</label>
+        <input type="number" id="calcAmount" value="500" min="0" step="10" oninput="runCalc()" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-emerald-400 font-mono mb-3">
+        <div id="calcOut" class="text-xs text-slate-300 space-y-0.5"></div>
+        <p class="text-[10px] text-slate-500 mt-4">These numbers come from the same calculator the USSD confirm screen uses.</p>
     </div>
 </div>
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow flex flex-col justify-center items-center">
 
-    <!-- Physical Keypad Keyboard Hint Banner -->
     <div class="mb-5 px-4 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-center text-xs text-slate-400 max-w-3xl flex items-center justify-center gap-2">
-        <span class="text-emerald-400 font-bold"><i class="fa-solid fa-keyboard"></i> Keypad Mapping:</span>
+        <span class="text-emerald-400 font-bold"><i class="fa-solid fa-keyboard"></i> Dial *120# then follow the screens. Keys:</span>
         <span>Use onscreen buttons or PC keyboard: <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">0-9</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">*</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">#</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">&uarr; &darr;</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">Enter (CALL)</code>, <code class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">Esc (END)</code></span>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 w-full max-w-5xl justify-items-center items-start">
 
-        <!-- ================= PHONE 1: SENDER FEATURE PHONE ================= -->
         <div id="phone1Wrapper" class="w-full max-w-[340px] flex flex-col items-center transition-all duration-300">
             <div class="w-full flex justify-between items-center mb-2 px-2 text-xs">
                     <span class="flex items-center gap-1.5 font-bold text-emerald-400">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        SENDER DEVICE (SENDER)
+                        SENDER (Thandi, Johannesburg)
                     </span>
                 <span class="font-mono text-slate-400" id="senderNumLabel">+27 82 123 4567</span>
             </div>
 
-            <!-- Casing Shell -->
             <div class="relative w-full bg-phoneCasingP1 rounded-[42px] p-5 border-[6px] border-slate-700 shadow-phone-shadow flex flex-col items-center select-none">
 
                 <div class="w-20 h-2 bg-slate-900 rounded-full mb-3 border border-slate-800 flex justify-center items-center gap-1">
@@ -195,18 +193,16 @@
                     <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
                 </div>
 
-                <div class="text-[11px] font-pixel tracking-widest text-slate-400 mb-2 uppercase">NOKIA 3310-FX</div>
+                <div class="text-[11px] font-pixel tracking-widest text-slate-400 mb-2 uppercase">R200 PHONE</div>
 
-                <!-- LCD Box Screen -->
                 <div class="w-full bg-slate-900 p-3 rounded-2xl border-2 border-slate-800 mb-4 shadow-inner">
                     <div id="p1-lcd" class="lcd-screen lcd-screen-p1 h-64 rounded-lg p-2.5 flex flex-col justify-between font-lcd text-lcdText relative overflow-hidden border border-slate-700/50">
                         <div class="lcd-glass absolute inset-0 pointer-events-none z-20"></div>
 
-                        <!-- Screen Header -->
                         <div class="flex justify-between items-center border-b border-lcdText/30 pb-1 z-10 text-xs font-bold">
                             <div class="flex items-center space-x-1">
-                                <i class="fa-solid fa-signal text-[10px]"></i>
-                                <span class="text-[11px]">MTN-FX</span>
+                                <span id="p1Bars" style="display:inline-flex;align-items:flex-end;height:13px"></span>
+                                <span class="text-[11px]">MTN</span>
                             </div>
                             <span id="p1-clock" class="text-sm font-bold">10:42</span>
                             <div class="flex items-center space-x-1">
@@ -214,29 +210,24 @@
                             </div>
                         </div>
 
-                        <!-- LCD Content Display Area -->
                         <div id="p1LcdContent" class="flex-grow flex flex-col justify-between py-1 z-10 font-lcd">
-                            <!-- IDLE DIALER STATE -->
                             <div id="p1IdleView" class="flex flex-col items-center justify-center text-center h-full">
                                 <div class="text-xs uppercase tracking-wider font-pixel mb-1 opacity-80">USSD Ready</div>
                                 <div id="p1DialBuffer" class="text-2xl font-bold font-mono tracking-widest my-2 break-all text-center min-h-[32px] px-1 bg-lcdText/10 rounded w-full flex items-center justify-center">
-                                    *120*123#
+                                    *120#
                                 </div>
-                                <div class="text-xs opacity-80 font-pixel text-[8px] mt-2">Press CALL to dial USSD</div>
+                                <div id="p1IdleNote" class="text-xs opacity-80 font-pixel text-[8px] mt-2 whitespace-pre-line leading-snug">Press CALL to dial USSD</div>
                             </div>
 
-                            <!-- ACTIVE USSD WIZARD STATE -->
                             <div id="p1UssdView" class="hidden flex-col justify-between h-full text-left font-lcd leading-tight">
                                 <div id="p1UssdHeader" class="text-xs font-bold border-b border-lcdText/30 pb-0.5 flex justify-between">
                                     <span id="p1UssdTitle">USSD Menu</span>
-                                    <span class="font-pixel text-[8px] animate-pulse">LIVE</span>
+                                    <span id="p1Live" class="font-pixel text-[8px] animate-pulse">LIVE</span>
                                 </div>
 
                                 <div id="p1UssdText" class="text-[15px] my-1 overflow-y-auto max-h-[135px] leading-tight font-lcd tracking-wide lcd-scroll pr-1">
-                                    <!-- USSD Screen Content Rendered via JS -->
                                 </div>
 
-                                <!-- USSD Input Box -->
                                 <div id="p1UssdInputBox" class="flex items-center gap-1 border-t border-lcdText/40 pt-0.5 text-sm">
                                     <span>&gt;</span>
                                     <span id="p1UssdInputVal" class="font-bold font-mono underline min-h-[18px]"></span>
@@ -245,7 +236,6 @@
                             </div>
                         </div>
 
-                        <!-- Screen Footer Softkeys -->
                         <div class="flex justify-between items-center text-[10px] font-pixel border-t border-lcdText/30 pt-1 z-10 uppercase">
                             <span id="p1LeftSoftLabel">Menu</span>
                             <span id="p1MiddleSoftLabel" class="text-[8px]">Select</span>
@@ -254,14 +244,12 @@
                     </div>
                 </div>
 
-                <!-- PHYSICAL HARDWARE KEYPAD -->
                 <div class="w-full px-1 flex flex-col gap-2.5">
                     <div class="grid grid-cols-3 gap-2 items-center">
                         <button onclick="pressSoftKey('LEFT')" class="physical-key h-9 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-retro-btn border border-slate-500 text-xs font-bold text-slate-200 flex items-center justify-center">
                             <span class="w-4 h-1 bg-slate-400 rounded-full"></span>
                         </button>
 
-                        <!-- D-Pad Directional Nav Button -->
                         <div class="grid grid-cols-3 grid-rows-3 gap-0.5 bg-slate-900 p-1 rounded-xl border border-slate-700 shadow-inner h-14">
                             <div></div>
                             <button onclick="pressDPad('UP')" class="physical-key bg-slate-700 hover:bg-slate-600 rounded text-[10px] text-slate-300 flex items-center justify-center shadow-sm">
@@ -289,7 +277,6 @@
                         </button>
                     </div>
 
-                    <!-- Call / End Call Buttons -->
                     <div class="grid grid-cols-2 gap-3">
                         <button onclick="pressCallButton()" class="physical-key h-10 bg-emerald-700 hover:bg-emerald-600 text-emerald-100 rounded-xl shadow-retro-btn border border-emerald-500 flex items-center justify-center gap-2 font-bold text-xs">
                             <i class="fa-solid fa-phone"></i>
@@ -301,7 +288,6 @@
                         </button>
                     </div>
 
-                    <!-- Numpad Grid -->
                     <div class="grid grid-cols-3 gap-2 pt-1">
                         <button id="btn-1" onclick="pressNumpad('1')" class="physical-key h-10 bg-slate-800 hover:bg-slate-700 rounded-xl shadow-retro-btn border border-slate-600 flex flex-col items-center justify-center text-slate-100">
                             <span class="text-base font-bold leading-none">1</span>
@@ -358,19 +344,18 @@
                 </div>
 
             </div>
+            <div id="p1Stats" class="mt-2 text-[10px] font-mono text-slate-500 text-center">no traffic yet</div>
         </div>
 
-        <!-- ================= PHONE 2: RECEIVER FEATURE PHONE ================= -->
         <div id="phone2Wrapper" class="w-full max-w-[340px] flex flex-col items-center transition-all duration-300 lg:flex">
             <div class="w-full flex justify-between items-center mb-2 px-2 text-xs">
                     <span class="flex items-center gap-1.5 font-bold text-indigo-400">
                         <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
-                        RECEIVER DEVICE (BENEFICIARY)
+                        RECEIVER (Mama, Harare)
                     </span>
-                <span class="font-mono text-slate-400" id="receiverNumLabel">+254 712 345678</span>
+                <input id="receiverNumInput" type="text" value="+263771234567" onchange="setReceiverPhone(this.value, true)" title="Receiver's number." class="w-36 bg-transparent border-b border-slate-700 text-right font-mono text-slate-300 focus:outline-none focus:border-indigo-400">
             </div>
 
-            <!-- Phone Casing -->
             <div class="relative w-full bg-phoneCasingP2 rounded-[42px] p-5 border-[6px] border-slate-700 shadow-phone-shadow flex flex-col items-center select-none">
 
                 <div class="w-20 h-2 bg-slate-900 rounded-full mb-3 border border-slate-800 flex justify-center items-center gap-1">
@@ -379,18 +364,16 @@
                     <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
                 </div>
 
-                <div class="text-[11px] font-pixel tracking-widest text-slate-400 mb-2 uppercase">SAMSUNG E1200</div>
+                <div class="text-[11px] font-pixel tracking-widest text-slate-400 mb-2 uppercase">R200 PHONE</div>
 
-                <!-- LCD Box Screen -->
                 <div class="w-full bg-slate-900 p-3 rounded-2xl border-2 border-slate-800 mb-4 shadow-inner">
                     <div id="p2-lcd" class="lcd-screen lcd-screen-p2 h-64 rounded-lg p-2.5 flex flex-col justify-between font-lcd text-lcdText relative overflow-hidden border border-slate-700/50">
                         <div class="lcd-glass absolute inset-0 pointer-events-none z-20"></div>
 
-                        <!-- Screen Header -->
                         <div class="flex justify-between items-center border-b border-lcdText/30 pb-1 z-10 text-xs font-bold">
                             <div class="flex items-center space-x-1">
                                 <i class="fa-solid fa-signal text-[10px]"></i>
-                                <span class="text-[11px]">SAFARICOM</span>
+                                <span class="text-[11px]">ECONET</span>
                             </div>
                             <span id="p2-clock" class="text-sm font-bold">10:42</span>
                             <div class="flex items-center space-x-1">
@@ -399,17 +382,14 @@
                             </div>
                         </div>
 
-                        <!-- LCD Receiver Screen View -->
                         <div id="p2LcdContent" class="flex-grow flex flex-col justify-between py-1 z-10 font-lcd">
 
-                            <!-- SMS Alert Popup View -->
                             <div id="p2AlertView" class="hidden flex-col items-center justify-center text-center h-full animate-bounce">
                                 <i class="fa-solid fa-envelope text-3xl mb-1"></i>
                                 <div class="font-pixel text-[10px] uppercase font-bold mb-1">1 New Message!</div>
-                                <div class="text-xs font-lcd">From: M-BANKING</div>
+                                <div class="text-xs font-lcd">From: MONEYHOME</div>
                             </div>
 
-                            <!-- SMS Message Reader View -->
                             <div id="p2SmsView" class="flex flex-col justify-between h-full text-left font-lcd leading-tight">
                                 <div class="text-xs font-bold border-b border-lcdText/30 pb-0.5 flex justify-between">
                                     <span id="p2SmsHeader">Inbox (1/1)</span>
@@ -417,18 +397,17 @@
                                 </div>
 
                                 <div id="p2SmsBody" class="text-[14px] my-1 overflow-y-auto max-h-[140px] font-lcd tracking-wide whitespace-pre-wrap leading-tight lcd-scroll pr-1">
-                                    Waiting for incoming mobile money transfer notification...
+                                    No messages yet.
                                 </div>
 
                                 <div id="p2SmsFooter" class="text-[10px] font-mono border-t border-lcdText/30 pt-0.5 flex justify-between text-lcdText/80">
-                                    <span>Bal: <strong id="p2BalanceDisplay">KES 25,000.00</strong></span>
+                                    <span>SMS: <strong id="p2SmsCount">0</strong></span>
                                     <span>SIM1</span>
                                 </div>
                             </div>
 
                         </div>
 
-                        <!-- Receiver Screen Softkey Labels -->
                         <div class="flex justify-between items-center text-[10px] font-pixel border-t border-lcdText/30 pt-1 z-10 uppercase">
                             <span id="p2LeftSoftLabel">Read</span>
                             <span id="p2MiddleSoftLabel" class="text-[8px]">Options</span>
@@ -437,7 +416,6 @@
                     </div>
                 </div>
 
-                <!-- Receiver Simplified Hardware Keypad -->
                 <div class="w-full px-1 flex flex-col gap-3">
                     <div class="grid grid-cols-3 gap-2 items-center">
                         <button onclick="pressP2SoftKey('READ')" class="physical-key h-9 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-retro-btn border border-slate-500 text-[10px] font-bold text-slate-200 flex items-center justify-center font-pixel">
@@ -458,8 +436,12 @@
                         </button>
                     </div>
 
-                    <!-- Cosmetic key matrix -->
-                    <div class="grid grid-cols-3 gap-2 pt-2 opacity-60">
+                    <button onclick="collectCash()" class="physical-key h-10 bg-indigo-700 hover:bg-indigo-600 text-indigo-50 rounded-xl shadow-retro-btn border border-indigo-500 flex items-center justify-center gap-2 font-bold text-xs">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        <span>COLLECT CASH</span>
+                    </button>
+
+                    <div class="grid grid-cols-3 gap-2 pt-1 opacity-60">
                         <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">1</div>
                         <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">2</div>
                         <div class="h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-mono">3</div>
@@ -473,21 +455,87 @@
         </div>
 
     </div>
+
+    <section class="w-full max-w-5xl mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="font-bold text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-route text-emerald-400"></i> Money tracker
+                </h2>
+                <span id="serverBadge" class="text-[10px] font-mono px-2 py-0.5 rounded border border-slate-700 text-slate-400">connecting...</span>
+            </div>
+            <div id="trackerList" class="space-y-3 max-h-96 overflow-y-auto pr-1"></div>
+            <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 flex flex-wrap items-center gap-x-4 gap-y-2">
+                <label class="flex items-center gap-1.5"><input type="checkbox" id="autoEnabled" onchange="saveAuto()" checked> Auto-advance</label>
+                <label class="flex items-center gap-1.5">every <input type="number" id="autoSeconds" min="1" max="600" value="10" onchange="saveAuto()" class="w-14 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 font-mono text-emerald-400"> s</label>
+                <label class="flex items-center gap-1.5"><input type="checkbox" id="autoCollect" onchange="saveAuto()"> auto-collect</label>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+                <h2 class="font-bold text-sm text-white flex items-center gap-2 mb-3">
+                    <i class="fa-solid fa-chart-line text-indigo-400"></i> Live exchange rate (Rand per US$1)
+                </h2>
+                <div class="grid grid-cols-3 gap-3 text-center mb-3">
+                    <div class="bg-slate-800/70 rounded-lg p-2"><div class="text-[10px] text-slate-400">Market</div><div id="fxMid" class="font-mono font-bold text-slate-100">-</div></div>
+                    <div class="bg-slate-800/70 rounded-lg p-2"><div class="text-[10px] text-slate-400">Our rate</div><div id="fxOurs" class="font-mono font-bold text-emerald-300">-</div></div>
+                    <div class="bg-slate-800/70 rounded-lg p-2"><div class="text-[10px] text-slate-400">Our margin</div><div id="fxMargin" class="font-mono font-bold text-amber-300">-</div></div>
+                </div>
+                <svg viewBox="0 0 200 40" preserveAspectRatio="none" class="w-full h-12 bg-slate-800/50 rounded">
+                    <polyline id="fxSpark" fill="none" stroke="#34d399" stroke-width="1.5" points=""></polyline>
+                </svg>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+                <h2 class="font-bold text-sm text-white flex items-center justify-between mb-3">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-message text-amber-400"></i> SMS outbox</span>
+                    <span class="text-[10px] font-mono text-slate-400"><span id="smsTotal">0</span> sent</span>
+                </h2>
+                <div id="smsList" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+    </section>
+
+    <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-800 border border-slate-600 text-slate-100 text-xs px-4 py-2 rounded-lg shadow-xl"></div>
 </main>
 
 <footer class="border-t border-slate-900 bg-slate-950/90 py-3 text-center text-xs text-slate-500 font-tech">
-    Cross-Border Mobile Banking USSD & Transfer Fee Simulator &bull; Web Audio Synthesizer Engine
+    Money Home &bull; USSD simulator &bull; talks to Java backend on /ussd
 </footer>
 
 <script>
-    // Web Audio Synthesizer (Key Beeps & Nokia Ringtone)
+    let API = '';
+    async function detectApi() {
+        const forced = new URLSearchParams(location.search).get('api');
+        if (forced) { API = forced.replace(/\/$/, ''); return; }
+
+        // Default candidates to test
+        const candidates = location.protocol === 'file:'
+            ? ['http://localhost:7070', 'http://localhost:8080']
+            : ['', 'http://localhost:7070', 'http://localhost:8080'];
+
+        for (const base of candidates) {
+            try {
+                const r = await fetch(base + '/api/health', { cache: 'no-store' });
+                if (r.ok) { API = base; return; }
+            } catch (e) {}
+        }
+        API = 'http://localhost:7070';
+    }
+
+    const THANDI = '+27821234567';
+    const $ = (id) => document.getElementById(id);
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
     let audioCtx = null;
     let soundEnabled = true;
 
     function initAudio() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
     function playKeyBeep(freq = 900, duration = 0.04) {
@@ -496,207 +544,157 @@
             initAudio();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
             osc.type = 'square';
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
             gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
             osc.start();
             osc.stop(audioCtx.currentTime + duration);
         } catch (e) {}
     }
 
-    // Classic Retro Monophonic Nokia SMS Ringtone
     function playRetroSMSChime() {
         if (!soundEnabled) return;
         try {
             initAudio();
             const now = audioCtx.currentTime;
-
             const notes = [
-                { f: 1300, d: 0.08, time: 0 },
-                { f: 1300, d: 0.08, time: 0.12 },
-                { f: 1300, d: 0.08, time: 0.24 },
-                { f: 1300, d: 0.22, time: 0.40 },
-                { f: 1300, d: 0.22, time: 0.68 },
-                { f: 1300, d: 0.08, time: 0.95 },
-                { f: 1300, d: 0.08, time: 1.07 },
-                { f: 1300, d: 0.08, time: 1.19 }
+                { f: 1300, d: 0.08, time: 0 }, { f: 1300, d: 0.08, time: 0.12 },
+                { f: 1300, d: 0.08, time: 0.24 }, { f: 1300, d: 0.22, time: 0.40 },
+                { f: 1300, d: 0.22, time: 0.68 }, { f: 1300, d: 0.08, time: 0.95 },
+                { f: 1300, d: 0.08, time: 1.07 }, { f: 1300, d: 0.08, time: 1.19 }
             ];
-
             notes.forEach(note => {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(note.f, now + note.time);
-
                 gain.gain.setValueAtTime(0.08, now + note.time);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + note.time + note.d);
-
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-
                 osc.start(now + note.time);
                 osc.stop(now + note.time + note.d);
             });
-        } catch(e) {}
+        } catch (e) {}
     }
 
     function toggleSound() {
         soundEnabled = !soundEnabled;
-        const btnIcon = document.getElementById('soundIcon');
-        btnIcon.className = soundEnabled ? "fa-solid fa-volume-high text-emerald-400" : "fa-solid fa-volume-xmark text-slate-500";
+        $('soundIcon').className = soundEnabled ? "fa-solid fa-volume-high text-emerald-400" : "fa-solid fa-volume-xmark text-slate-500";
     }
 
-    // FX & CURRENCY DATABASE (Rates relative to 1 USD base)
-    let transferFeePercent = 1.5; // Default 1.5% fee
+    let senderPhone = THANDI;
+    let receiverPhone = '+263771234567';
+    let followReceiver = true;
 
-    let currencyRates = {
-        USD: { name: "US Dollar", rate: 1.0, symbol: "$", phone: "+1 555 0192" },
-        ZAR: { name: "SA Rand", rate: 18.50, symbol: "R", phone: "+27 82 123 4567" },
-        KES: { name: "Kenyan Shilling", rate: 132.0, symbol: "KSh", phone: "+254 712 345678" },
-        NGN: { name: "Nigerian Naira", rate: 1450.0, symbol: "₦", phone: "+234 803 123 4567" },
-        EUR: { name: "Euro", rate: 0.92, symbol: "€", phone: "+49 151 234567" },
-        GBP: { name: "British Pound", rate: 0.79, symbol: "£", phone: "+44 7911 123456" },
-        INR: { name: "Indian Rupee", rate: 83.2, symbol: "₹", phone: "+91 98765 43210" },
-        GHS: { name: "Ghanaian Cedi", rate: 14.2, symbol: "GH₵", phone: "+233 24 123 4567" },
-        UGX: { name: "Ugandan Shilling", rate: 3750.0, symbol: "USh", phone: "+256 77 123 4567" },
-        PHP: { name: "Philippine Peso", rate: 57.5, symbol: "₱", phone: "+63 917 123 4567" }
-    };
-
-    const currencyList = Object.keys(currencyRates);
-
-    // SYSTEM & TRANSACTION STATE VARIABLES
-    let dialBuffer = "*120*123#";
+    let dialBuffer = '*120#';
     let isUssdActive = false;
+    let ussdEnded = false;
+    let busy = false;
+    let sessionId = '';
+    let ussdText = '';
+    let ussdInputVal = '';
+    let lastScreen = '';
+    let totalBytes = 0;
 
-    /*
-       USSD Steps:
-       - IDLE
-       - MAIN_MENU (1. Send Money, 2. FX Rates, 3. My Account)
-       - SENDER_CURRENCY (Choose sender currency)
-       - RECIPIENT_CURRENCY (Choose recipient currency)
-       - ENTER_PHONE (Enter recipient phone number)
-       - ENTER_AMOUNT (Enter base send amount)
-       - SUMMARY_CONFIRM (View FX rate, fee %, base, and TOTAL TO TAKE OUT)
-       - ENTER_PIN (Enter 4-digit PIN)
-       - SUCCESS (Completion Receipt)
-    */
-    let ussdStep = 'IDLE';
-    let ussdInputVal = "";
-
-    let tx = {
-        senderCurr: 'ZAR',
-        receiverCurr: 'KES',
-        recipientPhone: '+254 712 345678',
-        sendAmount: 500, // in Sender Currency
-        feeAmount: 0,    // in Sender Currency
-        totalDeduction: 0, // sendAmount + fee
-        receivedAmount: 0, // in Receiver Currency
-        fxRate: 1.0,      // 1 Sender Curr = X Receiver Curr
-        pin: '',
-        ref: ''
+    const SIGNALS = {
+        4: { min: 120, max: 350, loss: 0 },
+        3: { min: 300, max: 700, loss: 0.04 },
+        2: { min: 700, max: 1600, loss: 0.15 },
+        1: { min: 1300, max: 3200, loss: 0.30 }
     };
+    let signalBars = 4;
+    let dropNext = false;
 
-    let receiverBalance = 25000.0; // In KES
-    let p2SmsMessages = [
-        {
-            from: "M-BANKING",
-            time: "09:15",
-            body: "Welcome to Global Mobile Money. Account Active. Bal: KSh 25,000.00."
-        }
-    ];
-    let p2CurrentSmsIndex = 0;
+    let transfersCache = [];
+    let smsCache = [];
+    let rateInfo = null;
+    let rateHistory = [];
+    let online = false;
 
-    // Clock Update Loop
+    let p2Messages = [];
+    let p2Index = 0;
+    const seenSms = new Set();
+    let firstSmsLoad = true;
+    let p2Flash = '';
+
+    function mask(phone) {
+        const p = String(phone || '').trim();
+        if (p.length <= 7) return '****';
+        return p.slice(0, 4) + '*'.repeat(p.length - 7) + p.slice(-3);
+    }
+    function hhmm(iso) {
+        const d = iso ? new Date(iso) : new Date();
+        return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    }
+    function money(v) { return Number(v || 0).toFixed(2); }
+
+    async function getJson(path) {
+        const r = await fetch(API + path, { cache: 'no-store' });
+        if (!r.ok) throw new Error(path + ' ' + r.status);
+        return r.json();
+    }
+    async function post(path, params) {
+        const r = await fetch(API + path, { method: 'POST', body: new URLSearchParams(params) });
+        let data = {};
+        try { data = await r.json(); } catch (e) {}
+        return { ok: r.ok, status: r.status, data };
+    }
+    let toastTimer = null;
+    function toast(msg) {
+        const el = $('toast');
+        el.innerText = msg;
+        el.classList.remove('hidden');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.add('hidden'), 2600);
+    }
+
     function updateClocks() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const timeStr = `${h}:${m}`;
-        document.getElementById('p1-clock').innerText = timeStr;
-        document.getElementById('p2-clock').innerText = timeStr;
+        const t = hhmm();
+        $('p1-clock').innerText = t;
+        $('p2-clock').innerText = t;
     }
     setInterval(updateClocks, 1000);
     updateClocks();
 
-    // FX Settings Config Modal logic
-    function toggleFxModal() {
-        const modal = document.getElementById('fxModal');
-        modal.classList.toggle('hidden');
-        if (!modal.classList.contains('hidden')) {
-            populateFxModalFields();
-        }
+    function renderBars() {
+        const heights = [4, 7, 10, 13];
+        $('p1Bars').innerHTML = heights.map((h, i) =>
+            `<span style="display:inline-block;width:3px;height:${h}px;margin-right:1px;background:currentColor;opacity:${i < signalBars ? 1 : 0.2}"></span>`).join('');
+    }
+    function setSignal(v) {
+        signalBars = parseInt(v, 10);
+        renderBars();
+        toast(signalBars === 1 ? 'One bar of signal: expect slow replies and dropped sessions' : signalBars + ' bars of signal');
+    }
+    function dropSignal() {
+        dropNext = true;
+        $('dropBtn').classList.add('ring-2', 'ring-amber-400');
+        toast('The signal will drop on the next key press');
     }
 
-    function populateFxModalFields() {
-        document.getElementById('cfgFeePercent').value = transferFeePercent;
-        const container = document.getElementById('currencyRatesInputs');
-        container.innerHTML = "";
-
-        currencyList.forEach(code => {
-            const item = currencyRates[code];
-            container.innerHTML += `
-                    <div class="bg-slate-800 p-2 rounded border border-slate-700">
-                        <label class="block font-bold text-emerald-400 text-[11px]">${code} (${item.symbol})</label>
-                        <input type="number" id="rate_${code}" step="0.01" value="${item.rate}" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-slate-200 text-xs font-mono mt-0.5">
-                    </div>
-                `;
-        });
+    function setCustomer(kind) {
+        senderPhone = kind === 'new' ? '+2760' + String(Math.floor(1000000 + Math.random() * 8999999)) : THANDI;
+        $('senderNumLabel').innerText = senderPhone;
+        endUSSDSession();
+        refresh();
+        toast(kind === 'new' ? 'New customer: the language screen will show first' : 'Back to Thandi');
     }
 
-    function saveFxSettings() {
-        transferFeePercent = parseFloat(document.getElementById('cfgFeePercent').value) || 1.5;
-        currencyList.forEach(code => {
-            const input = document.getElementById(`rate_${code}`);
-            if (input) {
-                currencyRates[code].rate = parseFloat(input.value) || 1.0;
-            }
-        });
-        toggleFxModal();
-        if (isUssdActive) {
-            renderUSSDContent();
-        }
-    }
-
-    // Phone view switcher on mobile screens
     function setActivePhone(pNum) {
-        const p1 = document.getElementById('phone1Wrapper');
-        const p2 = document.getElementById('phone2Wrapper');
-        const btn1 = document.getElementById('showPhone1Btn');
-        const btn2 = document.getElementById('showPhone2Btn');
-
+        const p1 = $('phone1Wrapper'), p2 = $('phone2Wrapper');
+        const btn1 = $('showPhone1Btn'), btn2 = $('showPhone2Btn');
         if (pNum === 1) {
-            p1.classList.remove('hidden');
-            p2.classList.add('hidden');
+            p1.classList.remove('hidden'); p2.classList.add('hidden');
             btn1.className = "px-2.5 py-1 font-semibold rounded bg-emerald-500 text-slate-950 transition-all text-xs";
             btn2.className = "px-2.5 py-1 font-semibold rounded text-slate-400 hover:text-white transition-all text-xs";
         } else {
-            p1.classList.add('hidden');
-            p2.classList.remove('hidden');
+            p1.classList.add('hidden'); p2.classList.remove('hidden');
             btn2.className = "px-2.5 py-1 font-semibold rounded bg-indigo-500 text-white transition-all text-xs";
             btn1.className = "px-2.5 py-1 font-semibold rounded text-slate-400 hover:text-white transition-all text-xs";
-        }
-    }
-
-    function pressNumpad(key) {
-        playKeyBeep(850, 0.04);
-        highlightPhysicalKey(key);
-
-        if (!isUssdActive) {
-            if (dialBuffer.length < 15) {
-                dialBuffer += key;
-                document.getElementById('p1DialBuffer').innerText = dialBuffer;
-            }
-        } else {
-            ussdInputVal += key;
-            document.getElementById('p1UssdInputVal').innerText = ussdInputVal;
         }
     }
 
@@ -704,382 +702,484 @@
         let btnId = `btn-${key}`;
         if (key === '*') btnId = 'btn-star';
         if (key === '#') btnId = 'btn-hash';
-        const el = document.getElementById(btnId);
+        const el = $(btnId);
         if (el) {
             el.classList.add('key-active');
             setTimeout(() => el.classList.remove('key-active'), 120);
         }
     }
 
+    function pressNumpad(key) {
+        playKeyBeep(850, 0.04);
+        highlightPhysicalKey(key);
+        if (busy) return;
+        if (!isUssdActive) {
+            if (dialBuffer.length < 15) {
+                dialBuffer += key;
+                $('p1DialBuffer').innerText = dialBuffer;
+            }
+        } else if (!ussdEnded) {
+            if (ussdInputVal.length < 20) ussdInputVal += key;
+            renderInput();
+        }
+    }
+
     function pressCallButton() {
         playKeyBeep(1100, 0.08);
-        if (!isUssdActive) {
-            startUSSDSession();
-        } else {
-            submitUSSDStep();
-        }
+        if (busy) return;
+        if (!isUssdActive) startUSSDSession(); else submitUSSDStep();
     }
 
     function pressEndButton() {
         playKeyBeep(500, 0.08);
-        if (isUssdActive) {
-            endUSSDSession();
-        } else {
-            dialBuffer = "";
-            document.getElementById('p1DialBuffer').innerText = "";
-        }
+        if (isUssdActive) { endUSSDSession(); idleNote('Session closed'); }
+        else { dialBuffer = ''; $('p1DialBuffer').innerText = ''; }
     }
 
     function pressSoftKey(side) {
         playKeyBeep(950, 0.04);
+        if (busy) return;
         if (!isUssdActive) {
             if (side === 'LEFT') startUSSDSession();
-            if (side === 'RIGHT') {
-                dialBuffer = dialBuffer.slice(0, -1);
-                document.getElementById('p1DialBuffer').innerText = dialBuffer;
-            }
-        } else {
-            if (side === 'LEFT' || side === 'SELECT') {
-                submitUSSDStep();
-            } else if (side === 'RIGHT') {
-                if (ussdInputVal.length > 0) {
-                    ussdInputVal = ussdInputVal.slice(0, -1);
-                    document.getElementById('p1UssdInputVal').innerText = ussdInputVal;
-                } else {
-                    endUSSDSession();
-                }
-            }
+            if (side === 'RIGHT') { dialBuffer = dialBuffer.slice(0, -1); $('p1DialBuffer').innerText = dialBuffer; }
+        } else if (side === 'LEFT' || side === 'SELECT') {
+            submitUSSDStep();
+        } else if (side === 'RIGHT') {
+            if (ussdEnded) endUSSDSession();
+            else if (ussdInputVal.length > 0) { ussdInputVal = ussdInputVal.slice(0, -1); renderInput(); }
+            else { endUSSDSession(); idleNote('Session closed'); }
         }
     }
 
     function pressDPad(dir) {
         playKeyBeep(750, 0.03);
-        if (isUssdActive && (dir === 'UP' || dir === 'DOWN')) {
-            // Easy option switching using D-Pad
-            let valNum = parseInt(ussdInputVal) || 1;
-            if (dir === 'UP' && valNum > 1) valNum--;
-            if (dir === 'DOWN') valNum++;
-            ussdInputVal = String(valNum);
-            document.getElementById('p1UssdInputVal').innerText = ussdInputVal;
+        if (isUssdActive && !ussdEnded && (dir === 'UP' || dir === 'DOWN')) {
+            let n = parseInt(ussdInputVal, 10) || 1;
+            if (dir === 'UP' && n > 1) n--;
+            if (dir === 'DOWN') n++;
+            ussdInputVal = String(n);
+            renderInput();
         }
+    }
+
+    class NetworkError extends Error {}
+
+    async function ussdRequest(text) {
+        const cfg = SIGNALS[signalBars];
+        const delay = rand(cfg.min, cfg.max);
+        const lost = dropNext || Math.random() < cfg.loss;
+        const lostWhere = lost ? (dropNext ? 'response' : (Math.random() < 0.5 ? 'request' : 'response')) : null;
+        dropNext = false;
+        $('dropBtn').classList.remove('ring-2', 'ring-amber-400');
+
+        await sleep(delay / 2);
+        if (lostWhere === 'request') { await sleep(delay); throw new NetworkError('request'); }
+
+        // Exact matching payload for your Java UssdController.java
+        const body = new URLSearchParams({ sessionId, phoneNumber: senderPhone, text });
+        const res = await fetch(API + '/ussd', { method: 'POST', body });
+
+        if (!res.ok) throw new Error('backend answered ' + res.status);
+        const reply = await res.text();
+        await sleep(delay / 2);
+        if (lostWhere === 'response') throw new NetworkError('response');
+        totalBytes += body.toString().length + reply.length;
+        return reply;
     }
 
     function startUSSDSession() {
-        isUssdActive = true;
-        document.getElementById('p1IdleView').classList.add('hidden');
-        document.getElementById('p1UssdView').classList.remove('hidden');
-
-        document.getElementById('p1LeftSoftLabel').innerText = "Send";
-        document.getElementById('p1RightSoftLabel').innerText = "Cancel";
-
-        ussdStep = 'MAIN_MENU';
-        ussdInputVal = "";
-        renderUSSDContent();
-    }
-
-    function endUSSDSession() {
-        isUssdActive = false;
-        document.getElementById('p1UssdView').classList.add('hidden');
-        document.getElementById('p1IdleView').classList.remove('hidden');
-
-        document.getElementById('p1LeftSoftLabel').innerText = "Menu";
-        document.getElementById('p1RightSoftLabel').innerText = "Clear";
-        ussdInputVal = "";
-    }
-
-    // FINANCIAL CALCULATOR: Calculate FX rates & total deductions
-    function calculateFxAndFees() {
-        // 1. Convert Sender Amount -> Receiver Amount
-        // Formula: Rate = (Receiver USD Rate / Sender USD Rate)
-        const senderUSD = currencyRates[tx.senderCurr].rate;
-        const receiverUSD = currencyRates[tx.receiverCurr].rate;
-
-        tx.fxRate = receiverUSD / senderUSD; // 1 Sender Curr = X Receiver Curr
-        tx.receivedAmount = tx.sendAmount * tx.fxRate;
-
-        // 2. Transfer Fee in Sender Currency
-        tx.feeAmount = (tx.sendAmount * transferFeePercent) / 100;
-
-        // 3. TOTAL AMOUNT TO TAKE OUT / DEDUCT FROM SENDER ACCOUNT
-        tx.totalDeduction = tx.sendAmount + tx.feeAmount;
-    }
-
-    function renderUSSDContent() {
-        const textEl = document.getElementById('p1UssdText');
-        const titleEl = document.getElementById('p1UssdTitle');
-        document.getElementById('p1UssdInputVal').innerText = ussdInputVal;
-
-        if (ussdStep === 'MAIN_MENU') {
-            titleEl.innerText = "Global Banking";
-            textEl.innerHTML = `
-                    1. Send Money<br>
-                    2. Check FX Rates<br>
-                    3. My Balance<br>
-                    4. Exit
-                `;
-        } else if (ussdStep === 'SENDER_CURRENCY') {
-            titleEl.innerText = "Select Your Currency";
-            let list = "";
-            currencyList.forEach((c, i) => {
-                list += `${i + 1}.${c} (${currencyRates[c].symbol})<br>`;
-            });
-            textEl.innerHTML = list;
-        } else if (ussdStep === 'RECIPIENT_CURRENCY') {
-            titleEl.innerText = "Select Recipient Currency";
-            let list = "";
-            currencyList.forEach((c, i) => {
-                list += `${i + 1}.${c} (${currencyRates[c].symbol})<br>`;
-            });
-            textEl.innerHTML = list;
-        } else if (ussdStep === 'ENTER_PHONE') {
-            titleEl.innerText = "Recipient Phone";
-            textEl.innerHTML = `
-                    Enter Recipient No. (${tx.receiverCurr}):<br>
-                    <span class="text-[11px] opacity-80">${currencyRates[tx.receiverCurr].phone}</span>
-                `;
-        } else if (ussdStep === 'ENTER_AMOUNT') {
-            titleEl.innerText = "Send Amount";
-            const sym = currencyRates[tx.senderCurr].symbol;
-            textEl.innerHTML = `
-                    Enter Amount in ${tx.senderCurr} (${sym}):<br>
-                    <span class="text-[11px] opacity-80">e.g. 500</span>
-                `;
-        } else if (ussdStep === 'SUMMARY_CONFIRM') {
-            calculateFxAndFees();
-            titleEl.innerText = "Transfer Summary";
-            const sSym = currencyRates[tx.senderCurr].symbol;
-            const rSym = currencyRates[tx.receiverCurr].symbol;
-
-            textEl.innerHTML = `
-                    Send: ${sSym}${tx.sendAmount.toFixed(2)} (${tx.senderCurr})<br>
-                    Fee (${transferFeePercent}%): ${sSym}${tx.feeAmount.toFixed(2)}<br>
-                    <span class="font-bold underline">TOTAL DEDUCTION: ${sSym}${tx.totalDeduction.toFixed(2)}</span><br>
-                    Fx: 1 ${tx.senderCurr} = ${tx.fxRate.toFixed(2)} ${tx.receiverCurr}<br>
-                    Receiver Gets: <strong>${rSym}${tx.receivedAmount.toFixed(2)}</strong><br>
-                    <span class="text-[11px]">1. Confirm & Send</span>
-                `;
-        } else if (ussdStep === 'ENTER_PIN') {
-            titleEl.innerText = "Security PIN";
-            const sSym = currencyRates[tx.senderCurr].symbol;
-            textEl.innerHTML = `
-                    Confirm TOTAL TAKE OUT:<br>
-                    <strong class="text-sm font-mono">${sSym}${tx.totalDeduction.toFixed(2)} ${tx.senderCurr}</strong><br>
-                    Enter 4-Digit PIN:
-                `;
-        } else if (ussdStep === 'SUCCESS') {
-            titleEl.innerText = "Transfer Complete";
-            document.getElementById('p1UssdInputBox').classList.add('hidden');
-            document.getElementById('p1LeftSoftLabel').innerText = "OK";
-            document.getElementById('p1RightSoftLabel').innerText = "Exit";
-
-            const sSym = currencyRates[tx.senderCurr].symbol;
-            const rSym = currencyRates[tx.receiverCurr].symbol;
-
-            textEl.innerHTML = `
-                    SUCCESS!<br>
-                    Deducted: <strong>${sSym}${tx.totalDeduction.toFixed(2)} ${tx.senderCurr}</strong><br>
-                    Recipient: ${rSym}${tx.receivedAmount.toFixed(2)} (${tx.receiverCurr})<br>
-                    Rate: 1 ${tx.senderCurr} = ${tx.fxRate.toFixed(2)} ${tx.receiverCurr}<br>
-                    Ref: <strong>${tx.ref}</strong>
-                `;
-        } else if (ussdStep === 'VIEW_RATES') {
-            titleEl.innerText = "Live Exchange Rates";
-            document.getElementById('p1UssdInputBox').classList.add('hidden');
-            let ratesText = "1 USD Rates:<br>";
-            currencyList.slice(0, 5).forEach(c => {
-                ratesText += `${c}: ${currencyRates[c].symbol}${currencyRates[c].rate.toFixed(1)}<br>`;
-            });
-            textEl.innerHTML = ratesText;
-        }
+        if (dialBuffer !== '*120#') { idleNote('Invalid code. Dial *120#'); return; }
+        sessionId = 'sim-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        ussdText = '';
+        ussdInputVal = '';
+        ussdEnded = false;
+        exchange('', true);
     }
 
     function submitUSSDStep() {
+        if (ussdEnded) { endUSSDSession(); return; }
         const val = ussdInputVal.trim();
+        if (!val) { toast('Type your answer first'); return; }
 
-        if (ussdStep === 'MAIN_MENU') {
-            if (val === '1' || val === '') {
-                ussdStep = 'SENDER_CURRENCY';
-                ussdInputVal = "2"; // Default ZAR
-                renderUSSDContent();
-            } else if (val === '2') {
-                ussdStep = 'VIEW_RATES';
-                renderUSSDContent();
-            } else if (val === '3') {
-                document.getElementById('p1UssdText').innerHTML = "Main Account Bal:<br><strong>R 12,500.00 ZAR</strong>";
-                ussdStep = 'SUCCESS';
-                document.getElementById('p1UssdInputBox').classList.add('hidden');
-            } else {
-                endUSSDSession();
-            }
-        } else if (ussdStep === 'SENDER_CURRENCY') {
-            const idx = parseInt(val) - 1;
-            if (idx >= 0 && idx < currencyList.length) {
-                tx.senderCurr = currencyList[idx];
-                document.getElementById('senderNumLabel').innerText = currencyRates[tx.senderCurr].phone;
-                ussdStep = 'RECIPIENT_CURRENCY';
-                ussdInputVal = "3"; // Default KES
-                renderUSSDContent();
-            }
-        } else if (ussdStep === 'RECIPIENT_CURRENCY') {
-            const idx = parseInt(val) - 1;
-            if (idx >= 0 && idx < currencyList.length) {
-                tx.receiverCurr = currencyList[idx];
-                tx.recipientPhone = currencyRates[tx.receiverCurr].phone;
-                document.getElementById('receiverNumLabel').innerText = tx.recipientPhone;
-                ussdStep = 'ENTER_PHONE';
-                ussdInputVal = tx.recipientPhone;
-                renderUSSDContent();
-            }
-        } else if (ussdStep === 'ENTER_PHONE') {
-            if (val.length >= 7) {
-                tx.recipientPhone = val;
-                ussdStep = 'ENTER_AMOUNT';
-                ussdInputVal = "500";
-                renderUSSDContent();
-            }
-        } else if (ussdStep === 'ENTER_AMOUNT') {
-            const amt = parseFloat(val);
-            if (!isNaN(amt) && amt > 0) {
-                tx.sendAmount = amt;
-                ussdStep = 'SUMMARY_CONFIRM';
-                ussdInputVal = "1";
-                renderUSSDContent();
-            }
-        } else if (ussdStep === 'SUMMARY_CONFIRM') {
-            ussdStep = 'ENTER_PIN';
-            ussdInputVal = "";
-            renderUSSDContent();
-        } else if (ussdStep === 'ENTER_PIN') {
-            if (val === "1234" || val.length >= 4) {
-                tx.ref = "FX" + Math.floor(100000 + Math.random() * 900000);
-                ussdStep = 'SUCCESS';
-                renderUSSDContent();
+        // Accumulates values into format expected by Java backend ("1*1*0771234567*500")
+        exchange(ussdText ? ussdText + '*' + val : val, false);
+    }
 
-                // Send incoming transfer alert to Phone 2
-                dispatchSMSToReceiver(tx);
+    async function exchange(text, isDial) {
+        busy = true;
+        if (isDial) idleNote('Dialling...');
+        else $('p1Live').innerText = '...';
+        const t0 = performance.now();
+        try {
+            const reply = await ussdRequest(text);
+            const ms = Math.round(performance.now() - t0);
+            const end = reply.startsWith('END');
+            lastScreen = reply.replace(/^(CON|END) ?/, '');
+            ussdText = text;
+            ussdInputVal = '';
+            ussdEnded = end;
+            isUssdActive = true;
+            showUssdView();
+            $('p1Stats').innerText = `last reply: ${lastScreen.length} chars, ${(ms / 1000).toFixed(1)} s | total sent+received: ${totalBytes} bytes`;
+        } catch (e) {
+            if (e instanceof NetworkError) {
+                const wasInSession = isUssdActive;
+                isUssdActive = false; ussdEnded = false; ussdText = ''; ussdInputVal = '';
+                showIdleView();
+                idleNote('Connection lost.\nPress CALL to redial.');
+                toast(wasInSession || !isDial ? 'Signal dropped. Dial *120# again' : 'No signal. Try again');
             } else {
-                document.getElementById('p1UssdText').innerHTML = "<span class='font-bold text-rose-800'>INVALID PIN!</span><br>Use 1234";
-                setTimeout(() => {
-                    ussdInputVal = "";
-                    renderUSSDContent();
-                }, 1400);
+                isUssdActive = false;
+                showIdleView();
+                idleNote('Backend not responding.\nMake sure Java application\nis running on backend port.');
             }
-        } else if (ussdStep === 'SUCCESS' || ussdStep === 'VIEW_RATES') {
-            document.getElementById('p1UssdInputBox').classList.remove('hidden');
-            endUSSDSession();
+        } finally {
+            busy = false;
+            refresh();
         }
     }
 
-    function dispatchSMSToReceiver(data) {
-        // Update receiver balance in receiver currency
-        receiverBalance += data.receivedAmount;
-        const rSym = currencyRates[data.receiverCurr].symbol;
-        document.getElementById('p2BalanceDisplay').innerText = `${data.receiverCurr} ${rSym}${receiverBalance.toFixed(2)}`;
+    function endUSSDSession() {
+        isUssdActive = false; ussdEnded = false; ussdText = ''; ussdInputVal = '';
+        showIdleView();
+    }
 
-        const now = new Date();
-        const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    function idleNote(msg) { $('p1IdleNote').innerText = msg; }
 
-        const sSym = currencyRates[data.senderCurr].symbol;
+    function showIdleView() {
+        $('p1UssdView').classList.add('hidden');
+        $('p1UssdView').classList.remove('flex');$('p1IdleView').classList.remove('hidden');
+        $('p1UssdInputBox').classList.remove('hidden');$('p1LeftSoftLabel').innerText = 'Menu';
+        $('p1RightSoftLabel').innerText = 'Clear';$('p1DialBuffer').innerText = dialBuffer;
+        idleNote('Press CALL to dial USSD');
+    }
 
-        const smsBody = `Received ${rSym}${data.receivedAmount.toFixed(2)} ${data.receiverCurr} from ${data.senderCurr} (${currencyRates[data.senderCurr].phone}).\nFx Rate: 1 ${data.senderCurr} = ${data.fxRate.toFixed(2)} ${data.receiverCurr}.\nSender Total Paid: ${sSym}${data.totalDeduction.toFixed(2)}.\nRef: ${data.ref}.\nNew Bal: ${rSym}${receiverBalance.toFixed(2)}.`;
+    function showUssdView() {
+        $('p1IdleView').classList.add('hidden');$('p1UssdView').classList.remove('hidden');
+        $('p1UssdView').classList.add('flex');$('p1UssdTitle').innerText = 'USSD *120#';
+        $('p1Live').innerText = ussdEnded ? 'END' : 'LIVE';
+        $('p1UssdText').innerHTML = esc(lastScreen).replace(/\n/g, '<br>');$('p1UssdText').scrollTop = 0;
+        $('p1UssdInputBox').classList.toggle('hidden', ussdEnded);$('p1LeftSoftLabel').innerText = ussdEnded ? 'OK' : 'Send';
+        $('p1RightSoftLabel').innerText = ussdEnded ? 'Exit' : 'Cancel';
+        renderInput();
+    }
 
-        const newMsg = {
-            from: "M-BANKING",
-            time: timeStr,
-            body: smsBody
-        };
+    function renderInput() {
+        const needsPin = /PIN/.test(lastScreen) && !ussdEnded;
+        $('p1UssdInputVal').innerText = needsPin ? '*'.repeat(ussdInputVal.length) : ussdInputVal;
+    }
 
-        p2SmsMessages.unshift(newMsg);
-        p2CurrentSmsIndex = 0;
+    function resetEntireSystem() {
+        playKeyBeep(400, 0.1);
+        dialBuffer = '*120#';
+        endUSSDSession();
+        totalBytes = 0;
+        $('p1Stats').innerText = 'no traffic yet';
+        p2Index = 0;
+        $('p2EnvelopeIcon').classList.add('hidden');
+        $('p2AlertView').classList.add('hidden');$('p2SmsView').classList.remove('hidden');
+        renderP2();
+        toast('Phones reset');
+    }
 
-        setTimeout(() => {
+    function setReceiverPhone(v, fromUser) {
+        const n = String(v || '').replace(/\s/g, '');
+        if (!n) return;
+        let norm = n;
+        if (/^0\d{9}$/.test(n)) norm = '+263' + n.slice(1);
+        else if (/^263\d{9}$/.test(n)) norm = '+' + n;
+        receiverPhone = norm;
+        if (fromUser) followReceiver = false;
+        $('receiverNumInput').value = receiverPhone;
+        p2Index = 0;
+        firstSmsLoad = true;
+        updateP2FromSms();
+    }
+
+    function updateP2FromSms() {
+        const wanted = mask(receiverPhone);
+        const mine = smsCache.filter(m => m.to === wanted || m.to === receiverPhone);
+        let fresh = false;
+        mine.forEach(m => {
+            const key = m.sentAt + '|' + m.text;
+            if (!seenSms.has(key)) { seenSms.add(key); if (!firstSmsLoad) fresh = true; }
+        });
+        p2Messages = mine;
+        if (p2Index >= p2Messages.length) p2Index = 0;
+        renderP2();
+        if (fresh) {
+            p2Index = 0;
+            renderP2();
             playRetroSMSChime();
+            $('p2EnvelopeIcon').classList.remove('hidden');$('p2SmsView').classList.add('hidden');
+            $('p2AlertView').classList.remove('hidden');$('p2AlertView').classList.add('flex');
+            if (window.innerWidth < 1024) setActivePhone(2);
+        }
+        firstSmsLoad = false;
+    }
 
-            // Show screen envelope & alert modal
-            document.getElementById('p2EnvelopeIcon').classList.remove('hidden');
-            document.getElementById('p2SmsView').classList.add('hidden');
-            document.getElementById('p2AlertView').classList.remove('hidden');
-            document.getElementById('p2LeftSoftLabel').innerText = "Read";
-
-            if (window.innerWidth < 1024) {
-                setActivePhone(2);
-            }
-        }, 600);
+    function renderP2() {
+        $('p2SmsCount').innerText = p2Messages.length;
+        if (p2Flash) {
+            $('p2SmsHeader').innerText = 'Money Home';$('p2SmsBody').innerText = p2Flash;
+            return;
+        }
+        if (p2Messages.length === 0) {
+            $('p2SmsHeader').innerText = 'Inbox (0)';
+            $('p2SmsTime').innerText = '';$('p2SmsBody').innerText = 'No messages yet.\nWaiting for money from home...';
+            return;
+        }
+        const msg = p2Messages[p2Index];
+        $('p2SmsHeader').innerText = `Inbox (${p2Index + 1}/${p2Messages.length})`;
+        $('p2SmsTime').innerText = hhmm(msg.sentAt);$('p2SmsBody').innerText = msg.text;
     }
 
     function pressP2SoftKey(action) {
         playKeyBeep(800, 0.04);
-        if (action === 'READ') {
-            document.getElementById('p2EnvelopeIcon').classList.add('hidden');
-            document.getElementById('p2AlertView').classList.add('hidden');
-            document.getElementById('p2SmsView').classList.remove('hidden');
-            renderP2SmsMessage();
-        } else if (action === 'BACK') {
-            document.getElementById('p2AlertView').classList.add('hidden');
-            document.getElementById('p2SmsView').classList.remove('hidden');
-            p2CurrentSmsIndex = 0;
-            renderP2SmsMessage();
-        }
+        $('p2EnvelopeIcon').classList.add('hidden');$('p2AlertView').classList.add('hidden');
+        $('p2AlertView').classList.remove('flex');$('p2SmsView').classList.remove('hidden');
+        p2Flash = '';
+        if (action === 'BACK') p2Index = 0;
+        renderP2();
     }
 
     function navigateP2Sms(dir) {
         playKeyBeep(700, 0.03);
-        if (dir === 'UP' && p2CurrentSmsIndex > 0) {
-            p2CurrentSmsIndex--;
-            renderP2SmsMessage();
-        } else if (dir === 'DOWN' && p2CurrentSmsIndex < p2SmsMessages.length - 1) {
-            p2CurrentSmsIndex++;
-            renderP2SmsMessage();
+        p2Flash = '';
+        if (dir === 'UP' && p2Index > 0) p2Index--;
+        else if (dir === 'DOWN' && p2Index < p2Messages.length - 1) p2Index++;
+        renderP2();
+    }
+
+    async function collectCash() {
+        playKeyBeep(1000, 0.08);
+        const t = transfersCache.find(x => x.recipientPhone === receiverPhone && x.status === 'READY_TO_COLLECT');
+        if (!t) {
+            pressP2SoftKey('READ');
+            p2Flash = 'Nothing to collect yet.\nWe will SMS you when your money is ready.';
+            renderP2();
+            setTimeout(() => { p2Flash = ''; renderP2(); }, 3000);
+            return;
+        }
+        const r = await post('/api/collect', { ref: t.reference });
+        if (r.ok) {
+            pressP2SoftKey('READ');
+            p2Flash = `Cash collected!\n$${money(t.receiveUsd)}\nRef ${t.reference}`;
+            renderP2();
+            setTimeout(() => { p2Flash = ''; renderP2(); }, 4000);
+        } else {
+            toast(r.data.error || 'Could not collect');
+        }
+        refresh();
+    }
+
+    const STEPS = [['SENT', 'Sent'], ['IN_TRANSIT', 'In transit'], ['READY_TO_COLLECT', 'Ready to collect'], ['COLLECTED', 'Collected']];
+
+    function trackerItem(t) {
+        const bad = t.status === 'FAILED' || t.status === 'CANCELLED';
+        const idx = STEPS.findIndex(s => s[0] === t.status);
+        const dots = STEPS.map((s, i) => {
+            const done = !bad && i <= idx;
+            const cur = done && i === idx && t.status !== 'COLLECTED';
+            const color = done ? (cur ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500') : 'bg-slate-700';
+            return `<div class="flex flex-col items-center gap-1 flex-1 min-w-0">
+                        <div class="w-3 h-3 rounded-full ${color}"></div>
+                        <span class="text-[9px] leading-tight text-center ${done ? 'text-slate-200' : 'text-slate-500'}">${s[1]}</span>
+                    </div>`;
+        }).join('');
+        const badge = bad ? `<span class="text-[10px] font-bold text-rose-300 bg-rose-500/20 border border-rose-500/30 rounded px-1.5 py-0.5">${t.status}</span>` : '';
+        let buttons = '';
+        if (t.status === 'SENT' || t.status === 'IN_TRANSIT') {
+            buttons = `<button onclick="adminAdvance('${t.reference}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold">Advance <i class="fa-solid fa-forward-step"></i></button>
+                       <button onclick="adminFail('${t.reference}')" class="px-2 py-1 rounded bg-rose-700/70 hover:bg-rose-600 text-white text-[11px] font-bold">Fail</button>`;
+        } else if (t.status === 'READY_TO_COLLECT') {
+            buttons = `<button onclick="adminAdvance('${t.reference}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold">Mark collected</button>`;
+        }
+        return `<div class="bg-slate-800/70 border border-slate-700 rounded-xl p-3">
+            <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="font-mono font-bold text-emerald-300 text-sm">${esc(t.reference)}</span>
+                ${badge}
+                <span class="text-[10px] text-slate-400 font-mono">updated ${hhmm(t.updatedAt)}</span>
+            </div>
+            <div class="text-[11px] text-slate-300 mb-2 font-mono">
+                You paid R${money(t.totalZar)} (R${money(t.amountZar)} + R${money(t.feeZar)} fee) &rarr;
+                <strong class="text-white">$${money(t.receiveUsd)}</strong> to ${esc(t.recipient)} @ R${money(t.rate)}/$1
+            </div>
+            <div class="flex items-start gap-1 mb-2">${dots}</div>
+            <div class="flex gap-2 justify-end">${buttons}</div>
+        </div>`;
+    }
+
+    function renderTracker() {
+        const el = $('trackerList');
+        if (!transfersCache.length) {
+            el.innerHTML = '<div class="text-xs text-slate-500 italic py-6 text-center">No transfers yet. Dial *120# on the sender phone and send some money.</div>';
+            return;
+        }
+        el.innerHTML = transfersCache.map(trackerItem).join('');
+    }
+
+    function renderSms() {
+        const el = $('smsList');$('smsTotal').innerText = smsCache.length;
+        if (!smsCache.length) {
+            el.innerHTML = '<div class="text-xs text-slate-500 italic py-6 text-center">No SMS sent yet.</div>';
+            return;
+        }
+        const sMask = mask(senderPhone), rMask = mask(receiverPhone);
+        el.innerHTML = smsCache.map(m => {
+            const role = m.to === rMask ? 'receiver' : (m.to === sMask ? 'sender' : '');
+            const chip = role ? `<span class="text-[9px] uppercase font-bold ${role === 'receiver' ? 'text-indigo-300' : 'text-emerald-300'}">${role}</span>` : '';
+            const ok = m.length <= 160 && m.gsm7;
+            return `<div class="bg-slate-800/70 border border-slate-700 rounded-lg p-2.5">
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
+                    <span>${hhmm(m.sentAt)} &rarr; ${esc(m.to)} ${chip}</span>
+                    <span class="${ok ? 'text-emerald-400' : 'text-rose-400'}">${m.length}/160 ${m.gsm7 ? 'GSM-7' : 'NOT GSM-7'}</span>
+                </div>
+                <div class="text-xs text-slate-200 whitespace-pre-wrap">${esc(m.text)}</div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderFx() {
+        if (!rateInfo) return;
+        $('fxMid').innerText = money(rateInfo.midMarketRate);
+        $('fxOurs').innerText = money(rateInfo.ourRate);$('fxMargin').innerText = money(rateInfo.marginZarPerUsd);
+        const pts = rateHistory;
+        if (pts.length < 2) return;
+        const min = Math.min(...pts), max = Math.max(...pts);
+        const span = Math.max(max - min, 0.05);
+        const path = pts.map((v, i) => {
+            const x = (i / (pts.length - 1)) * 200;
+            const y = 36 - ((v - min) / span) * 32;
+            return x.toFixed(1) + ',' + y.toFixed(1);
+        }).join(' ');
+        $('fxSpark').setAttribute('points', path);
+    }
+
+    function setOnline(v) {
+        online = v;
+        const b = $('serverBadge');
+        b.innerText = v ? 'backend online' : 'backend offline';
+        b.className = 'text-[10px] font-mono px-2 py-0.5 rounded border ' +
+            (v ? 'border-emerald-500/40 text-emerald-300 bg-emerald-500/10' : 'border-rose-500/40 text-rose-300 bg-rose-500/10');
+    }
+
+    let autoInitialised = false;
+    let refreshing = false;
+    async function refresh() {
+        if (refreshing) return;
+        refreshing = true;
+        try {
+            const [rate, transfers, sms] = await Promise.all([getJson('/api/rate'), getJson('/api/transfers'), getJson('/api/sms')]);
+            setOnline(true);
+            rateInfo = rate;
+            rateHistory.push(Number(rate.ourRate));
+            if (rateHistory.length > 60) rateHistory.shift();
+            transfersCache = transfers;
+            smsCache = sms;
+            if (!autoInitialised) {
+                $('autoEnabled').checked = rate.scheduler.auto;
+                $('autoSeconds').value = rate.scheduler.seconds;
+                $('autoCollect').checked = rate.scheduler.autoCollect;
+                autoInitialised = true;
+            }
+            if (followReceiver) {
+                const last = transfers.find(t => t.senderPhone === senderPhone);
+                if (last && last.recipientPhone !== receiverPhone) setReceiverPhone(last.recipientPhone, false);
+            }
+            renderTracker();
+            renderSms();
+            renderFx();
+            updateP2FromSms();
+        } catch (e) {
+            setOnline(false);
+        } finally {
+            refreshing = false;
         }
     }
 
-    function renderP2SmsMessage() {
-        if (p2SmsMessages.length === 0) return;
-        const msg = p2SmsMessages[p2CurrentSmsIndex];
-        document.getElementById('p2SmsHeader').innerText = `Inbox (${p2CurrentSmsIndex + 1}/${p2SmsMessages.length})`;
-        document.getElementById('p2SmsTime').innerText = msg.time;
-        document.getElementById('p2SmsBody').innerText = msg.body;
+    async function adminAdvance(ref) {
+        const r = await post('/admin/advance', { ref });
+        if (!r.ok) toast(r.data.error || 'Could not advance');
+        refresh();
+    }
+    async function adminFail(ref) {
+        const r = await post('/admin/status', { ref, status: 'FAILED' });
+        if (!r.ok) toast(r.data.error || 'Could not fail');
+        refresh();
+    }
+    async function saveAuto() {
+        await post('/admin/auto', {
+            enabled: $('autoEnabled').checked,
+            seconds: $('autoSeconds').value || '10',
+            collect: $('autoCollect').checked
+        });
+        toast('Saved');
     }
 
-    // PHYSICAL KEYBOARD SHORTCUTS
+    function toggleFxModal() {
+        const modal = $('fxModal');
+        modal.classList.toggle('hidden');
+        if (!modal.classList.contains('hidden')) { fillRuleText(); runCalc(); }
+    }
+
+    function fillRuleText() {
+        if (!rateInfo) return;
+        $('ruleText').innerText =
+            `Fee: ${rateInfo.feePercent}% of the amount, at least R${rateInfo.minFeeZar}, at most R${rateInfo.maxFeeZar}. ` +
+            `You can send R${rateInfo.minZar} to R${rateInfo.maxZar}. Our rate is the market rate plus a small margin, shown below.`;
+    }
+
+    const CALC_ERRORS = {
+        'error.min_amount': 'Below the minimum amount.',
+        'error.max_amount': 'Above the maximum amount.',
+        'error.invalid_amount': 'Enter a valid amount.',
+        'error.rate_expired': 'The rate expired, try again.'
+    };
+
+    async function runCalc() {
+        const v = $('calcAmount').value;
+        const out = $('calcOut');
+        try {
+            const r = await fetch(API + '/api/quote?amount=' + encodeURIComponent(v), { cache: 'no-store' });
+            const q = await r.json();
+            if (!r.ok) { out.innerHTML = `<div class="text-rose-300">${esc(CALC_ERRORS[q.error] || q.error)}</div>`; return; }
+            const row = (a, b, strong) => `<div class="flex justify-between ${strong ? 'font-bold text-white border-t border-slate-700 pt-1 mt-1' : ''}"><span>${a}</span><span class="font-mono">${b}</span></div>`;
+            out.innerHTML =
+                row('You send', 'R' + money(q.amountZar)) +
+                row('Our fee', 'R' + money(q.feeZar)) +
+                row('You pay in total', 'R' + money(q.totalZar), true) +
+                row('Market rate', 'R' + money(q.midMarketRate) + ' = $1') +
+                row('Our rate', 'R' + money(q.rate) + ' = $1') +
+                row('They receive', '$' + money(q.receiverGetsUsd), true) +
+                `<div class="text-[10px] text-slate-500 mt-1">Rate held until ${hhmm(q.rateExpiresAt)}</div>`;
+        } catch (e) {
+            out.innerHTML = '<div class="text-rose-300">Backend offline.</div>';
+        }
+    }
+
     document.addEventListener('keydown', (e) => {
-        if ((e.key >= '0' && e.key <= '9') || e.key === '*' || e.key === '#') {
-            pressNumpad(e.key);
-        } else if (e.key === 'Enter') {
-            pressCallButton();
-        } else if (e.key === 'Escape') {
-            pressEndButton();
-        } else if (e.key === 'ArrowUp') {
-            pressDPad('UP');
-        } else if (e.key === 'ArrowDown') {
-            pressDPad('DOWN');
-        } else if (e.key === 'ArrowLeft') {
-            pressSoftKey('LEFT');
-        } else if (e.key === 'ArrowRight') {
-            pressSoftKey('RIGHT');
-        } else if (e.key === 'Backspace') {
-            pressSoftKey('RIGHT');
+        if (e.target && e.target.matches && e.target.matches('input, select, textarea')) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (e.target && e.target.blur) e.target.blur();
+            if (e.key === ' ') return;
         }
+        if ((e.key >= '0' && e.key <= '9') || e.key === '*' || e.key === '#') pressNumpad(e.key);
+        else if (e.key === 'Enter') pressCallButton();
+        else if (e.key === 'Escape') pressEndButton();
+        else if (e.key === 'ArrowUp') pressDPad('UP');
+        else if (e.key === 'ArrowDown') pressDPad('DOWN');
+        else if (e.key === 'ArrowLeft') pressSoftKey('LEFT');
+        else if (e.key === 'ArrowRight' || e.key === 'Backspace') pressSoftKey('RIGHT');
     });
 
-    function resetEntireSystem() {
-        playKeyBeep(400, 0.1);
-        receiverBalance = 25000.0;
-        document.getElementById('p2BalanceDisplay').innerText = "KES KSh25000.00";
-        dialBuffer = "*120*123#";
-        document.getElementById('p1DialBuffer').innerText = dialBuffer;
-        endUSSDSession();
-
-        p2SmsMessages = [
-            {
-                from: "M-BANKING",
-                time: "09:15",
-                body: "Welcome to Global Mobile Money. Account Active. Bal: KSh 25,000.00."
-            }
-        ];
-        p2CurrentSmsIndex = 0;
-        renderP2SmsMessage();
-    }
+    renderBars();
+    $('senderNumLabel').innerText = senderPhone;
+    $('receiverNumInput').value = receiverPhone;
+    $('p1DialBuffer').innerText = dialBuffer;
+    renderP2();
+    detectApi().then(() => { refresh(); setInterval(refresh, 1500); });
 </script>
 </body>
 </html>
